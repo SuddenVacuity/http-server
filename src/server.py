@@ -105,3 +105,4 @@ def run(host="127.0.0.1", port=80):
 		except KeyboardInterrupt:
 			httpd.shutdown()
 			httpd.server_close()
+			quit()

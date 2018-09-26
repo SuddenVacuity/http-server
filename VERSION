@@ -4,6 +4,9 @@
           major.minor.stable.unstable
 ===============================================
 
+v0.0.1.1 - Quit on Keyboard Interrupt
+add: quit command for server on keyboard interrupt
+
 v0.0.1.0 - Restructure and list Http Status Codes
 add: main.py
 add: check to determine responses to status codes returned by server logic
