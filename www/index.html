@@ -1,0 +1,37 @@
+<!--
+This file is subject to the terms and conditions found 
+by requesting "/license" or in the file "LICENSE" located 
+in the server source files base directory.
+-->
+<html>
+<head>
+	<link rel="icon" type="image/gif" href="favicon.ico">
+	<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+	<p>Test Html File</p>
+
+	<h4>Test CSS Import</h4>
+	<span id="redtext">Red</span>
+	<span id="bluetext">Blue</span>
+	<span id="greentext">Green</span>
+
+	<h4>Test Javascript Import</h4>
+	<p id="number">---</p>
+	<button id="btn" onclick="randomNumber()">Get a Random Number</button>
+	<script type="text/javascript" src="script.js"></script>
+	<br>
+	<h4>Test POST</h4>
+	<p>- requires javascript -
+		<br>Enter text with Entry Id being its identifier.
+		<br>You can then call any text that was sent by using its identifier.</p>
+	<form action="" method="post">
+ 		<input type="text" id="entryId" name="postEntry" placeholder="Entry Id" value="" />
+ 		<br>
+ 		<input type="text" id="entryData" name="postEntry" placeholder="Entry Value" value="" />
+	</form>
+	<button id="btn1" onclick="sendEntryText('/post')">Send Data</button>
+	<button id="btn2" onclick="getEntryText('/post')">Load Data</button>
+	<p id="entry">---</p>
+</body>
+</html>

@@ -1,0 +1,10 @@
+
+
+===============================================
+               VERSION HISTORY
+===============================================
+
+v0.0.0.0 - Initial Commit
+add: listens for and send http requests over socket
+add: basic webserver logic
+add: data hashing and encryption
