@@ -23,7 +23,7 @@ except ImportError:
 # set to false to skip tests
 # SET FALSE FOR DEVELOPEMENT ONLY
 # ALWAYS LEAVE TRUE IN PRODUCTION
-__DEBUG_SHOULD_RUN_TESTS = False
+__DEBUG_SHOULD_RUN_TESTS = True
 
 # the size of the output of weakHash() and saltedHash()
 BLAKE2B_DIGEST_SIZE = 64
@@ -156,6 +156,16 @@ def decrypt(data, key):
 	f = Fernet(key)
 	return f.decrypt(data)
 
+# hashes a string into a 32 bit integer
+# string (str) - string data to convert to an int
+# sodium (bytes) - 
+def hashToInt(string, sodium=b''):
+	h1 = hashlib.blake2b(digest_size=4, salt=sodium)
+	h1.update(string.encode())
+
+	result = h1.hexdigest()
+	return int(result, 16)
+
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 # # # # #                                         # # # # #
 # # # # #                                         # # # # #
@@ -178,6 +188,7 @@ def decrypt(data, key):
 from timeit import default_timer
 from string import ascii_uppercase # used to test case sensitivity
 from string import ascii_lowercase # used to test case sensitivity
+import random # used to check hashToInt() likely collision space
 
 
 #	the minimum and target times in seconds it must take for secureHash() 

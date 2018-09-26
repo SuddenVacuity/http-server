@@ -17,6 +17,7 @@ function getEntryText(url) {
 		return
 	}
 
+	// add parameters to the url
 	urlp = url + "?" + myId;
 
 	fetch(urlp).then(function(response) {

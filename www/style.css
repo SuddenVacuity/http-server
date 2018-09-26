@@ -4,20 +4,24 @@ by requesting "/license" or in the file "LICENSE" located
 in the server source files base directory.
 */
 * {
-	font-size: 8;
+	font-size: 12;
 	color: black;
 }
 
 h4 {
-	font-size: 16;
+	font-size: 24;
 	text-decoration: underline;
 	margin-bottom: 3px
 }
 
 input {
 	border-style: ridge;
-	border-width: 1px;
+	border-width: 2px;
 	color: gray;
+}
+
+div {
+	margin-bottom: 20px;
 }
 
 #redtext {
@@ -30,4 +34,8 @@ input {
 
 #greentext {
 	color: green;
+}
+
+#entry {
+	font-size: 14;
 }

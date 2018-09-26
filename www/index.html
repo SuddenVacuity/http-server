@@ -5,22 +5,30 @@ in the server source files base directory.
 -->
 <html>
 <head>
-	<link rel="icon" type="image/gif" href="favicon.ico">
+	<link rel="icon" type="image/gif" href="favicon.gif">
+	<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.18.1/build/cssreset/cssreset-min.css">
 	<link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
+<div>
 	<p>Test Html File</p>
+</div>
 
+<div>
 	<h4>Test CSS Import</h4>
 	<span id="redtext">Red</span>
 	<span id="bluetext">Blue</span>
 	<span id="greentext">Green</span>
+</div>
 
+<div>
 	<h4>Test Javascript Import</h4>
 	<p id="number">---</p>
 	<button id="btn" onclick="randomNumber()">Get a Random Number</button>
 	<script type="text/javascript" src="script.js"></script>
-	<br>
+</div>
+
+<div>
 	<h4>Test POST</h4>
 	<p>- requires javascript -
 		<br>Enter text with Entry Id being its identifier.
@@ -32,6 +40,8 @@ in the server source files base directory.
 	</form>
 	<button id="btn1" onclick="sendEntryText('/post')">Send Data</button>
 	<button id="btn2" onclick="getEntryText('/post')">Load Data</button>
+</div>
+
 	<p id="entry">---</p>
 </body>
 </html>

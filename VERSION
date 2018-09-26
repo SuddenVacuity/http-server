@@ -1,8 +1,22 @@
 
-
 ===============================================
                VERSION HISTORY
+          major.minor.stable.unstable
 ===============================================
+
+v0.0.1.0 - Restructure and list Http Status Codes
+add: main.py
+add: check to determine responses to status codes returned by server logic
+add: module to hande internal server logic
+add: classes to contain http request/response data
+add: support for loading external config file on startup
+fix: prevent directory traversal attacks when reading/writing files
+fix: give 415 media not supported response for POSTing unsupported media
+change: move server logic in request parser to its own file
+change: file names to make more sense
+change: requests read for files, actions or index based on the last bit of the url
+change: requested web page files are not compared to a whitelist
+remove: dead code in request processer
 
 v0.0.0.0 - Initial Commit
 add: listens for and send http requests over socket
