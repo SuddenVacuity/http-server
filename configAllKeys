@@ -1,0 +1,5 @@
+A full list of configuration options supported
+
+"baseDirectory": (str) the path to the project's base directory
+"ip4host":       (str) ip4 address of the device hosting the server
+"port":          (int) the port the server will use to listen for requests
