@@ -8,30 +8,17 @@ import sys # used to read command line arguments
 import json
 
 import server
+import config
 from serverLogic import accessFile
 from directoryIndex import directory
 
 if __name__ == "__main__":
-	HOST = "127.0.0.1"
-	PORT = 80
+	config.importConfigFile()
 
-	# try to load config data
-	try:
-		configData = accessFile.readFile(directory.base + "/config.json", directory.base)
-		configDict = json.loads(configData)
+	directory.setBaseDirectory(config.values["baseDirectory"])
+	HOST = config.values["ip4host"]
+	PORT = config.values["port"]
 
-		HOST = configDict['ip4host']
-		PORT = configDict['port']
-	except:
-		print("Import config.json failed.")
-		while True:
-			userinput = input("Continue using default values? y/n").lower()
-			if(userinput == 'y'):
-				server.run()
-				quit()
-			elif(userinput == 'n'):
-				quit()
-	
 	# override defaults/config with command line arguments
 	if(len(sys.argv) == 2):
 		arg = sys.argv[1]

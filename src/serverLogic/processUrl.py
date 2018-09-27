@@ -50,7 +50,7 @@ def readUrl(url, query, data):
 		filepath = directory.www + url + "index.html"
 		status = HTTPStatus.OK
 		header = [["content-type", "text/html"]]
-		body = accessFile.readFile(filepath)
+		body = accessFile.readFile(filepath, directory.www)
 	# add the url to the base path of webpage file storage
 	elif(urlLength > 1):
 		# check if url is requesting a file with an extension
@@ -63,7 +63,7 @@ def readUrl(url, query, data):
 			filepath = directory.www + url
 			status = HTTPStatus.OK
 			header = [[mimeType[0], mimeType[1]]]
-			body = accessFile.readFile(filepath)
+			body = accessFile.readFile(filepath, directory.www)
 		# if the request does NOT have a file extension
 		# its meant to perform an action
 		else:
@@ -103,7 +103,7 @@ def readUrl(url, query, data):
 			else:
 				status = HTTPStatus.NOT_FOUND
 				header = [["content-type", "text/html"]]
-				body = accessFile.readFile(directory.www + "/404.html")
+				body = accessFile.readFile(directory.www + "/404.html", directory.www)
 	# a request split length of 1 means the request has no slashes '/'
 	# this means it was generated from the server itself
 	else:
@@ -111,7 +111,7 @@ def readUrl(url, query, data):
 		if(url == "405"):
 			status = HTTPStatus.METHOD_NOT_ALLOWED
 			header = [["content-type", "text/html"]]
-			body = accessFile.readFile(directory.www + "/405.html")
+			body = accessFile.readFile(directory.www + "/405.html", directory.www)
 		if(url == "415"):
 			status = HTTPStatus.UNSUPPORTED_MEDIA_TYPE
 			header = [["content-type", "text/html"]]

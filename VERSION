@@ -4,6 +4,12 @@
           major.minor.stable.unstable
 ===============================================
 
+v0.0.1.2 - Configuration Import Updates
+add: module to import configuration settings
+add: method to set the base directory
+fix: make path to config file a relative path
+remove: accessFile read/write file default argument for basepath
+
 v0.0.1.1 - Quit on Keyboard Interrupt
 add: quit command for server on keyboard interrupt
 

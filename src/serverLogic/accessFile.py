@@ -18,7 +18,7 @@ def isDirectoryContained(targetpath, basepath, follow_symlinks=True):
 
 # filepath (str) - local filepath to the file to read
 # RETURNS: (bytes)data read from file
-def readFile(filepath, basepath=directory.www):
+def readFile(filepath, basepath):
 	data = b''
 
 	# confirm the requested directory is within the intended accessable area
@@ -45,7 +45,7 @@ def readFile(filepath, basepath=directory.www):
 # filepath (str) - local filepath to the file to write to
 # data (str) - data to be written
 # RETURNS: (bool) success
-def writeFile(filepath, data, basepath=directory.www):
+def writeFile(filepath, data, basepath):
 	# confirm the requested directory is within the intended accessable area
 	if (isDirectoryContained(filepath, basepath) == False):
 		print("Illegal Write attempted on file:", filepath)
