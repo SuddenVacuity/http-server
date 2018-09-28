@@ -20,6 +20,12 @@ Running the Server:
         sudo python3 main.py
     If no config.json exists the server will run on localhost port 80 by default.
 
+    Configuration options can be set using arguments through the termimal.
+        Any key can be set; even new keys that are not part of the program and have no effect.
+        These arguments will override any options set though config.json
+        From the project src folder enter into a terminal:
+            sudo python3 main.py port=80 baseDirectory=/home/admin/server
+
 Accessing the Server's Services:
     In a browser enter the domain name or ip address of the host/router of the device running the server
 

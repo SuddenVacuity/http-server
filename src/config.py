@@ -29,6 +29,7 @@ def _setDefault():
 	values["port"] = 80
 
 # loads the config.json file and imports all key/value pairs to memory
+# RETURNS: (bool) succcess
 def importConfigFile():
 	_setDefault()
 
@@ -37,9 +38,8 @@ def importConfigFile():
 		# this must lead to where config.json exists
 		fileDirectory = values["baseDirectory"]
 		configData = accessFile.readFile(fileDirectory + "/config.json", fileDirectory)
-
-		configDict = json.loads(configData)
 		
+		configDict = json.loads(configData)
 		loadedKeys = configDict.keys()
 
 		for key in loadedKeys:
@@ -47,11 +47,33 @@ def importConfigFile():
 
 	except:
 		print("Import config.json failed.")
-		while True:
-			userinput = input("Continue using default values? y/n >> ").lower()
-			if(userinput == 'y'):
-				_setDefault()
-				server.run()
-				quit()
-			elif(userinput == 'n'):
-				quit()
+		_setDefault()
+		return False
+
+	return True
+
+# Takes a key/value pair and converts the type of value based on what data the key requires
+# NOTE: default value type is (str)
+def setKeyValue(key, value):
+	# convert the type of all values that should not be (str)
+	# NOTE: debate wether conversion should be done here or if all should be
+	#         stored as (str) and converted immediately before use
+	if(key == "port"):
+		try:
+			value = int(value)
+			values[key] = value
+		except:
+			print("WARNING: config.py >> \"{0}\": Argument must be an int".format(key))
+	else:
+		values[key] = value
+
+
+# Gets the value associated with a key
+# RETURNS: () value stored in dictionary for key
+#          NOTE: the data type depends on what type the data stored in the dictionary is.
+#                Find the key in setKeyValue() to see the type it is stored as
+#          returns None if the value does not exist
+def getKeyValue(key):
+	if not key in values:
+		return None
+	return values[key]
