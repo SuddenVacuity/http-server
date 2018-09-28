@@ -13,7 +13,7 @@ from serverLogic import accessFile
 # available to the server during runtime
 
 # dictionary containing the key/value pairs
-values = {}
+_values = {}
 
 # sets the config values to default
 def _setDefault():
@@ -22,11 +22,11 @@ def _setDefault():
 	# NOTE: this must lead to the folder containing folders www, db and file config.json
 	abspath = os.path.abspath(sys.argv[0])
 	path, file = os.path.split(abspath)
-	values["baseDirectory"] = os.path.realpath(path + "/..")
+	_values["baseDirectory"] = os.path.realpath(path + "/..")
 
 	# ip config
-	values["ip4host"] = "127.0.0.1"
-	values["port"] = 80
+	_values["ip4host"] = "127.0.0.1"
+	_values["port"] = 80
 
 # loads the config.json file and imports all key/value pairs to memory
 # RETURNS: (bool) succcess
@@ -36,14 +36,14 @@ def importConfigFile():
 	# try to load config data
 	try:
 		# this must lead to where config.json exists
-		fileDirectory = values["baseDirectory"]
+		fileDirectory = _values["baseDirectory"]
 		configData = accessFile.readFile(fileDirectory + "/config.json", fileDirectory)
-		
+
 		configDict = json.loads(configData)
 		loadedKeys = configDict.keys()
 
 		for key in loadedKeys:
-			values[key] = configDict[key]
+			_values[key] = configDict[key]
 
 	except:
 		print("Import config.json failed.")
@@ -61,11 +61,11 @@ def setKeyValue(key, value):
 	if(key == "port"):
 		try:
 			value = int(value)
-			values[key] = value
+			_values[key] = value
 		except:
 			print("WARNING: config.py >> \"{0}\": Argument must be an int".format(key))
 	else:
-		values[key] = value
+		_values[key] = value
 
 
 # Gets the value associated with a key
@@ -74,6 +74,6 @@ def setKeyValue(key, value):
 #                Find the key in setKeyValue() to see the type it is stored as
 #          returns None if the value does not exist
 def getKeyValue(key):
-	if not key in values:
+	if not key in _values:
 		return None
-	return values[key]
+	return _values[key]
