@@ -4,6 +4,13 @@
           major.minor.stable.unstable
 ===============================================
 
+v0.0.2.2 - Add Support for Subpages
+add: webpage class to handle page logic
+fix: seperate the actions associated with each page to its own file
+fix: read the favicon in the www base folder whenever favicon is requested
+fix: make get/send data requests on the main page sepereate commands
+fix: make index.html load both with and without a trailing slash on its base url
+
 v0.0.2.1 - Start Server Logic Overhaul
 add: create concept of webpage class to handle page logic
 fix: adjust the url process flow to be easier to follow and section

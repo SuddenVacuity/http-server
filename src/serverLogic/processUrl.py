@@ -9,8 +9,18 @@ from directoryIndex import directory
 from directoryIndex import accessFile
 from response import Response
 
+from serverLogic import landingpage
+from serverLogic import subpage
+
 # This file is responsible for every action the landing page can perform as well as
 # loading direct file requests and directing the request down the tree of subpages
+
+# register pages
+# this will be moved to file used to load webpages
+pages = {
+	"landingpage": landingpage.Landingpage("", "/"),
+	"subpage": subpage.Subpage("subpage", "/subpage")
+}
 
 # there's definitely a standard lib for this
 # get that .. don't expand this function
@@ -54,62 +64,42 @@ def readUrl(url, query, data):
 		fileSplit = urlSplit[urlLast].split('.') # [name, extension]
 
 		# if has file extension
-		# get the file by adding the url to the www directory
 		if(len(fileSplit) > 1):
-			mimeType = _getMimeType(fileSplit[1])
-			filepath = directory.www + url
-			status = HTTPStatus.OK
-			header = [[mimeType[0], mimeType[1]]]
-			body = accessFile.readFile(filepath, directory.www)
-			if(body == b''):
-				status = HTTPStatus.NOT_FOUND
-				header = [["content-type", "text/html"]]
-				body = accessFile.readFile(directory.www + "/404.html", directory.www)
+			# check if requesting favicon
+			if(fileSplit[0] == "favicon"):
+				print("Loading favicon:", fileSplit)
+				status = HTTPStatus.OK
+				header = [["content-type", "image/gif"]]
+				body = accessFile.readFile(directory.www + "/favicon.gif", directory.www)
+				if(body == b''):
+					status = HTTPStatus.NOT_FOUND
+			# get the file by adding the url to the www directory
+			else:
+				mimeType = _getMimeType(fileSplit[1])
+				filepath = directory.www + url
+				status = HTTPStatus.OK
+				header = [[mimeType[0], mimeType[1]]]
+				body = accessFile.readFile(filepath, directory.www)
+				if(body == b''):
+					status = HTTPStatus.NOT_FOUND
+					header = [["content-type", "text/html"]]
+					body = accessFile.readFile(directory.www + "/404.html", directory.www)
 
+######### START load webpages (this will be moved to its own file)
 		# attempt to perform an action associated with this page
 		# NOTE: start at 1 because "/" splites to ['', ''] and removing the leading element when there
 		#       are only 2 elements changes the object type to (str)
-######### load webpages (this will be moved to its own file)
-		elif(urlSplit[1] == ''):
-			filepath = directory.www + url + "index.html"
-			status = HTTPStatus.OK
-			header = [["content-type", "text/html"]]
-			body = accessFile.readFile(filepath, directory.www)
-		# call for the license
-		elif(urlSplit[1] == "license"):
-			filepath = directory.www + "/LICENSE.html"
-			status = HTTPStatus.OK
-			header = [["content-type", "text/html"]]
-			body = accessFile.readFile(filepath, directory.base)
-		elif(urlSplit[1] == "post"):
-			# this is a GET request
-			if(data == None):
-				filepath = directory.database + "/" + query
-				status = HTTPStatus.OK
-				header = [["content-type", "text/plain"]]
-				body = accessFile.readFile(filepath, directory.database)
-				# if read data is empty
-				if(body == b''):
-					status = HTTPStatus.NOT_FOUND
-					header = [["content-type", "text/plain"]]
-					body = b'Entry Does Not Exist'
-			# this is a POST request
-			else:
-				filepath = directory.database + "/" + data['id']
-				# attempt to create the file
-				if(accessFile.writeFile(filepath, data["value"], directory.database) == True):
-					status = HTTPStatus.CREATED
-					header = [["content-type", "text/plain"]]
-					body = b'Successfully Created Entry'
-				# unable to write to file
-				else:
-					status = HTTPStatus.CONFLICT
-					header = [["content-type", "text/plain"]]
-					body = b'Unable to process request'
+		elif(urlSplit[1] == "subpage"):
+			response = pages["subpage"].process(urlSplit[1:], query, data)
+			status = response.status
+			header = response.header
+			body = response.body
 		else:
-			status = HTTPStatus.NOT_FOUND
-			header = [["content-type", "text/html"]]
-			body = accessFile.readFile(directory.www + "/404.html", directory.www)
+			response = pages["landingpage"].process(urlSplit[1:], query, data)
+			status = response.status
+			header = response.header
+			body = response.body
+
 ######### END load webpages (this will be moved to its own file)
 
 	# internal requests
