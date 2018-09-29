@@ -9,6 +9,9 @@ from directoryIndex import directory
 from directoryIndex import accessFile
 from response import Response
 
+# This file is responsible for every action the landing page can perform as well as
+# loading direct file requests and directing the request down the tree of subpages
+
 # there's definitely a standard lib for this
 # get that .. don't expand this function
 def _getMimeType(fileExtension):
@@ -45,15 +48,9 @@ def readUrl(url, query, data):
 	urlLength = len(urlSplit)
 	urlLast = urlLength - 1
 
-	# trailing slash on url loads index.html
-	if(urlSplit[urlLast] == ''):
-		filepath = directory.www + url + "index.html"
-		status = HTTPStatus.OK
-		header = [["content-type", "text/html"]]
-		body = accessFile.readFile(filepath, directory.www)
-	# add the url to the base path of webpage file storage
-	elif(urlLength > 1):
-		# check if url is requesting a file with an extension
+	# http request
+	if(urlLength > 1):
+		# check if attempting to load a file directly
 		fileSplit = urlSplit[urlLast].split('.') # [name, extension]
 
 		# if has file extension
@@ -64,48 +61,58 @@ def readUrl(url, query, data):
 			status = HTTPStatus.OK
 			header = [[mimeType[0], mimeType[1]]]
 			body = accessFile.readFile(filepath, directory.www)
-		# if the request does NOT have a file extension
-		# its meant to perform an action
-		else:
-			# create/read data entries
-			if(url == "/post"):
-				# this is a GET request
-				if(data == None):
-					filepath = directory.database + "/" + query
-					status = HTTPStatus.OK
-					header = [["content-type", "text/plain"]]
-					body = accessFile.readFile(filepath, directory.database)
-					# if read data is empty
-					if(body == b''):
-						status = HTTPStatus.NOT_FOUND
-						header = [["content-type", "text/plain"]]
-						body = b'Entry Does Not Exist'
-				# this is a POST request
-				else:
-					filepath = directory.database + "/" + data['id']
-					# attempt to create the file
-					if(accessFile.writeFile(filepath, data["value"], directory.database) == True):
-						status = HTTPStatus.CREATED
-						header = [["content-type", "text/plain"]]
-						body = b'Successfully Created Entry'
-					# unable to write to file
-					else:
-						status = HTTPStatus.CONFLICT
-						header = [["content-type", "text/plain"]]
-						body = b'Unable to process request'
-			# call for the license
-			elif(url == "/license"):
-				filepath = directory.www + "/LICENSE.html"
-				status = HTTPStatus.OK
-				header = [["content-type", "text/html"]]
-				body = accessFile.readFile(filepath, directory.base)
-			# not found
-			else:
+			if(body == b''):
 				status = HTTPStatus.NOT_FOUND
 				header = [["content-type", "text/html"]]
 				body = accessFile.readFile(directory.www + "/404.html", directory.www)
-	# a request split length of 1 means the request has no slashes '/'
-	# this means it was generated from the server itself
+
+		# attempt to perform an action associated with this page
+		# NOTE: start at 1 because "/" splites to ['', ''] and removing the leading element when there
+		#       are only 2 elements changes the object type to (str)
+######### load webpages (this will be moved to its own file)
+		elif(urlSplit[1] == ''):
+			filepath = directory.www + url + "index.html"
+			status = HTTPStatus.OK
+			header = [["content-type", "text/html"]]
+			body = accessFile.readFile(filepath, directory.www)
+		# call for the license
+		elif(urlSplit[1] == "license"):
+			filepath = directory.www + "/LICENSE.html"
+			status = HTTPStatus.OK
+			header = [["content-type", "text/html"]]
+			body = accessFile.readFile(filepath, directory.base)
+		elif(urlSplit[1] == "post"):
+			# this is a GET request
+			if(data == None):
+				filepath = directory.database + "/" + query
+				status = HTTPStatus.OK
+				header = [["content-type", "text/plain"]]
+				body = accessFile.readFile(filepath, directory.database)
+				# if read data is empty
+				if(body == b''):
+					status = HTTPStatus.NOT_FOUND
+					header = [["content-type", "text/plain"]]
+					body = b'Entry Does Not Exist'
+			# this is a POST request
+			else:
+				filepath = directory.database + "/" + data['id']
+				# attempt to create the file
+				if(accessFile.writeFile(filepath, data["value"], directory.database) == True):
+					status = HTTPStatus.CREATED
+					header = [["content-type", "text/plain"]]
+					body = b'Successfully Created Entry'
+				# unable to write to file
+				else:
+					status = HTTPStatus.CONFLICT
+					header = [["content-type", "text/plain"]]
+					body = b'Unable to process request'
+		else:
+			status = HTTPStatus.NOT_FOUND
+			header = [["content-type", "text/html"]]
+			body = accessFile.readFile(directory.www + "/404.html", directory.www)
+######### END load webpages (this will be moved to its own file)
+
+	# internal requests
 	else:
 		# server requested command
 		if(url == "405"):
