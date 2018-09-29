@@ -7,7 +7,7 @@ import os # used to get project base directory
 import sys # used to get project base directory
 import json
 
-from serverLogic import accessFile
+from directoryIndex import accessFile
 
 # This loads key/value pairs form file config.json and makes the values
 # available to the server during runtime

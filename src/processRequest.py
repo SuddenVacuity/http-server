@@ -7,7 +7,7 @@ import http.cookies
 
 import checkStatus
 
-from serverLogic import accessFile
+from directoryIndex import accessFile
 from serverLogic import processUrl
 from response import Response
 from request import Request

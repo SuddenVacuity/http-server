@@ -6,7 +6,7 @@ in the file "LICENSE" located in the project base directory.
 from http import HTTPStatus
 
 from directoryIndex import directory
-from serverLogic import accessFile
+from directoryIndex import accessFile
 from response import Response
 
 # there's definitely a standard lib for this

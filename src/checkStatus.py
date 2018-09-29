@@ -9,7 +9,7 @@ from http import HTTPStatus
 
 # error html files are stored in the websites base directory
 from directoryIndex import directory
-from serverLogic import accessFile
+from directoryIndex import accessFile
 from response import Response
 
 # The final line before data gets sent to the output buffer

@@ -9,7 +9,7 @@ import json
 
 import server
 import config
-from serverLogic import accessFile
+from directoryIndex import accessFile
 from directoryIndex import directory
 
 if __name__ == "__main__":
