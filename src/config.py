@@ -53,11 +53,13 @@ def importConfigFile():
 	return True
 
 # Takes a key/value pair and converts the type of value based on what data the key requires
-# NOTE: default value type is (str)
+# key (str) - the key associanted with the value to be stored
+# value (str) - the value to be stored associated with the key
 def setKeyValue(key, value):
-	# convert the type of all values that should not be (str)
-	# NOTE: debate wether conversion should be done here or if all should be
-	#         stored as (str) and converted immediately before use
+	# convert the type of all values that should not be stored as (str)
+	# NOTE: This was decided to prevent a value of the wrong type to be stored nd prevent a value of the 
+	#       incorrect type to be called causing errors/exception,
+	# Exceptions will occur as soon as the value is set giving a warning that the type was incorrect
 	if(key == "port"):
 		try:
 			value = int(value)
