@@ -13,4 +13,4 @@ pages = {
 
 def process(urlSplit, query, data):
 	# this should call the process function of the website's landing page
-	return pageIndex.pages["landingpage"].process(urlSplit, query, data)
+	return pages["landingpage"].process(urlSplit, query, data)

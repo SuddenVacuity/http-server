@@ -4,6 +4,10 @@
           major.minor.stable.unstable
 ===============================================
 
+v0.0.2.4 - Minor Fixes
+fix: reference to stored data in pageIndex
+fix: set background color in css
+
 v0.0.2.3 - Manage Pages
 add: webpage logic template file
 add: class to manage available pages
