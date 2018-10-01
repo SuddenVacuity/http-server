@@ -4,14 +4,16 @@ in the file "LICENSE" located in the project base directory.
 '''
 from serverLogic import landingpage
 from serverLogic import subpage
+from serverLogic import subpage2
 
 # dictionary containing registered pages
 # USE: create a registered page uby adding an oject that inherits the wepbage class
 #      Label the inserted class with a unique identifier. This identifier will be used to 
 #      reference the class when loading it as a subpage
 pages = {
-	"landingpage": landingpage.Landingpage("", "/"),
-	"subpage": subpage.Subpage("subpage", "/")
+	"landingpage": landingpage.Landingpage("/", ""),
+	"subpage": subpage.Subpage("/", "subpage"),
+	"subpage2": subpage2.Subpage2("/subpage/", "subpage2")
 }
 
 def process(urlSplit, query, data):

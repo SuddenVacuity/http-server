@@ -4,6 +4,12 @@
           major.minor.stable.unstable
 ===============================================
 
+v0.0.2.6 - Subpage Error Fixes
+add: subpage within a subpage
+fix: error in passing urlSplit to subpages
+fix: error in page path generation
+change: update README.md
+
 v0.0.2.5 - Change Webpage Constructor
 change: webpage name/path construction
 

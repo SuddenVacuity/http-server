@@ -86,7 +86,7 @@ def readUrl(url, query, data):
 		# if not loading a file the loading a page
 		# NOTE: remove first element because "/page" splits to ['', 'page']
 		else:
-			response = pageIndex.process(urlSplit[1:], query, data)
+			response = pageIndex.process(urlSplit, query, data)
 			if(response != None):
 				status = response.status
 				header = response.header

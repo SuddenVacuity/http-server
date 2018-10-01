@@ -20,16 +20,7 @@ from serverLogic import pageIndex
 
 # to call this classes functions during processing use the funciton process()
 
-class Subpage(webpage.Webpage):
+class Subpage2(webpage.Webpage):
 	def performAction(self, urlSplit, query, data):
 		print("{} >> urlsplit: {}, query: {},  data:{}".format(self.pageName, urlSplit, query, data))
-		# check if calling subpage
-		if(urlSplit[0] == "subpage2"):
-			response = pageIndex.pages["subpage2"].process(urlSplit, query, data)
-			status = response.status
-			header = response.header
-			body = response.body
-		else:
-			return None
-
-		return Response(status, header, body)
+		return None

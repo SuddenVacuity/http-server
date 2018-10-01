@@ -1,5 +1,9 @@
 Overview:
     An http server made almost exclusively using the Python Standard Library.
+    This server focuses on controlling external access to source, database and webpage data.
+        Private:     Items in the project base and src folders are unavailable to outside requests.
+        Conditional: Requests for data from the db folder have extra processing through the server before it is given.
+        Public:      Items in the www folder are available to anyone that requests for it by its path.
 
 Dependencies: 
     python3.6+
@@ -43,3 +47,15 @@ Creating config.json:
            "ip4host": "192.168.1.XXX",
            "port": 80
     }
+
+Creating Wepages With Custom Logic:
+    Create an index.html for the page at an appropiate location within the www folder
+    Copy the file /src/serverLogic/pageTemplate.py and rename the copy.
+    Open the renamed file and rename the class PageTemplate(..)
+    Add custom logic to the overridden performAction function.
+    Import the copied file into pageIndex.py
+    Register the new page in pageIndex.py by creating an instance in the pages dictionary
+        www/index.html                    >> YourWebpage("/", "") 
+        www/targetpage/index.html         >> YourWebpage("/", "targetpage") 
+        www/subpage/targetpage/index.html >> YourWebpage("/subpage/", "targetpage")
+    Call the page where needed through pageIndex.pages[key].process(..)
