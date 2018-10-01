@@ -9,6 +9,8 @@ from directoryIndex import directory
 from directoryIndex import accessFile
 from response import Response
 
+from serverLogic import pageIndex
+
 # webpage are responsible for loading their index.html 
 # and performing any actions associated with the page
 
@@ -18,8 +20,9 @@ from response import Response
 # to call this classes functions during processing use the funciton process()
 
 class Webpage():
-	indexPath = '/'
+	indexPath = None
 	pageName = None
+
 	def __init__(self, name, path):
 		self.indexPath = path
 		self.pageName = name
@@ -27,17 +30,7 @@ class Webpage():
 	# do not override
 	# this function should only be called internally
 	def _loadIndex(self, urlSplit):
-		# www.yourdomain.com/page/
-		if(urlSplit[0] == ''):
-			print("loading Index.html")
-			filepath = directory.www + self.indexPath + "index.html"
-			status = HTTPStatus.OK
-			header = [["content-type", "text/html"]]
-			body = accessFile.readFile(filepath, directory.www)
-
-			return Response(status, header, body)
-
-		# www.yourdomain.com/page
+		print(urlSplit)
 		if(urlSplit[0] == self.pageName):
 			print("loading Index.html")
 			filepath = directory.www + self.indexPath + "/index.html"
@@ -67,13 +60,15 @@ class Webpage():
 			response = self.performAction(urlSplit, query, data)
 		if(response == None):
 			response = self._notFound()
+		if(response == None):
+			print("ERROR: 500 - Internal Server Error: {} no action taken and neither index.html nor 404.html found".format(self.indexPath))
+			response = Response(HTTPStatus.INTERNAL_SERVER_ERROR, [["content-type", "text/plain"]], b'500 - Internal Server Error')
 
 		return response
 
 	# override this function and insert the desired actions
 	# this function should only be called by called by process()
 	# RETURNS: (Response) http response data
-	#                     should return None on failure
+	#                     returns None when no action taken
 	def performAction(self, urlSplit, query, data):
-		print("Create copy of this file and override this function to perform actions here")
 		return None

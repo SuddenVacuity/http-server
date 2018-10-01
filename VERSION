@@ -4,11 +4,18 @@
           major.minor.stable.unstable
 ===============================================
 
+v0.0.2.3 - Manage Pages
+add: webpage logic template file
+add: class to manage available pages
+fix: move access to subpages to their parent page's logic
+fix: remove possible trailing / from url
+fix: add error response for when a page fails to be found due to internal error
+
 v0.0.2.2 - Add Support for Subpages
 add: webpage class to handle page logic
 fix: seperate the actions associated with each page to its own file
 fix: read the favicon in the www base folder whenever favicon is requested
-fix: make get/send data requests on the main page sepereate commands
+fix: make get/send data requests on the main page seperate commands
 fix: make index.html load both with and without a trailing slash on its base url
 
 v0.0.2.1 - Start Server Logic Overhaul

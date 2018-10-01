@@ -10,6 +10,7 @@ from directoryIndex import accessFile
 from response import Response
 
 from serverLogic import webpage
+from serverLogic import pageIndex
 
 # webpage are responsible for loading their index.html 
 # and performing any actions associated with the page
@@ -21,5 +22,5 @@ from serverLogic import webpage
 
 class Subpage(webpage.Webpage):
 	def performAction(self, urlSplit, query, data):
-		print("Create copy of this file and override this function to perform actions here")
+		print("{} >> urlsplit: {}, query: {},  data:{}".format(self.pageName, urlSplit, query, data))
 		return None

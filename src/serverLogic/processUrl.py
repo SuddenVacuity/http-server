@@ -9,18 +9,10 @@ from directoryIndex import directory
 from directoryIndex import accessFile
 from response import Response
 
-from serverLogic import landingpage
-from serverLogic import subpage
+from serverLogic import pageIndex
 
 # This file is responsible for every action the landing page can perform as well as
 # loading direct file requests and directing the request down the tree of subpages
-
-# register pages
-# this will be moved to file used to load webpages
-pages = {
-	"landingpage": landingpage.Landingpage("", "/"),
-	"subpage": subpage.Subpage("subpage", "/subpage")
-}
 
 # there's definitely a standard lib for this
 # get that .. don't expand this function
@@ -53,7 +45,13 @@ def readUrl(url, query, data):
 	header = [["content-type", "text/plain"]]
 	body = b'400 - Bad Request'
 
-	urlSplit = url.split("/") # [''. 'path', 'subpath', 'file']
+	# remove trailing / whlie leaving leading slash
+	# NOTE: the leading slash is used to check for internal server errors
+	#       that were passed along: no leading / means there was an error
+	if(len(url) > 1):
+		url = url.rstrip('/')
+
+	urlSplit = url.split('/') # [''. 'path', 'subpath', 'file']
 
 	urlLength = len(urlSplit)
 	urlLast = urlLength - 1
@@ -85,34 +83,31 @@ def readUrl(url, query, data):
 					header = [["content-type", "text/html"]]
 					body = accessFile.readFile(directory.www + "/404.html", directory.www)
 
-######### START load webpages (this will be moved to its own file)
-		# attempt to perform an action associated with this page
-		# NOTE: start at 1 because "/" splites to ['', ''] and removing the leading element when there
-		#       are only 2 elements changes the object type to (str)
-		elif(urlSplit[1] == "subpage"):
-			response = pages["subpage"].process(urlSplit[1:], query, data)
-			status = response.status
-			header = response.header
-			body = response.body
+		# if not loading a file the loading a page
+		# NOTE: start at 1 because "/" splites to ['', '']
 		else:
-			response = pages["landingpage"].process(urlSplit[1:], query, data)
-			status = response.status
-			header = response.header
-			body = response.body
-
-######### END load webpages (this will be moved to its own file)
+			response = pageIndex.process(urlSplit[1:], query, data)
+			if(response != None):
+				status = response.status
+				header = response.header
+				body = response.body
 
 	# internal requests
 	else:
-		# server requested command
+		# server requested errors
+		print("Internal Error:", url)
 		if(url == "405"):
 			status = HTTPStatus.METHOD_NOT_ALLOWED
 			header = [["content-type", "text/html"]]
 			body = accessFile.readFile(directory.www + "/405.html", directory.www)
-		if(url == "415"):
+		elif(url == "415"):
 			status = HTTPStatus.UNSUPPORTED_MEDIA_TYPE
 			header = [["content-type", "text/html"]]
 			body = b'MEDIA TYPE NOT SUPPORTED'
+		else:
+			status = HTTPStatus.INTERNAL_SERVER_ERROR
+			header = [["content-type", "text/plain"]]
+			body = b'500 - Internal Server Error'
 		# if this point is reached the response is the default
 		# response created at the top of this function
 

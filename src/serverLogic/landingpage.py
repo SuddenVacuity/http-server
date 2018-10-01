@@ -10,6 +10,7 @@ from directoryIndex import accessFile
 from response import Response
 
 from serverLogic import webpage
+from serverLogic import pageIndex
 
 # webpage are responsible for loading their index.html 
 # and performing any actions associated with the page
@@ -21,18 +22,19 @@ from serverLogic import webpage
 
 class Landingpage(webpage.Webpage):
 	def performAction(self, urlSplit, query, data):
-		print("Perform Actions Here")
-		print("Landingpage >> urlsplit: {}, query: {},  data:{}".format(urlSplit, query, data))
+		print("{} >> urlsplit: {}, query: {},  data:{}".format(self.pageName, urlSplit, query, data))
 
 		response = None
 
-		# call for the license
-		if(urlSplit[0] == "license"):
-			filepath = directory.www + "/LICENSE.html"
-			status = HTTPStatus.OK
-			header = [["content-type", "text/html"]]
-			body = accessFile.readFile(filepath, directory.base)
-			# this is a GET request
+		# check if calling subpage
+		if(urlSplit[0] == "subpage"):
+			response = pageIndex.pages["subpage"].process(urlSplit, query, data)
+			status = response.status
+			header = response.header
+			body = response.body
+
+		# this page's functions
+		# this is a GET request
 		elif(urlSplit[0] == "get"):
 			filepath = directory.database + "/" + query
 			status = HTTPStatus.OK
@@ -43,7 +45,7 @@ class Landingpage(webpage.Webpage):
 				status = HTTPStatus.NOT_FOUND
 				header = [["content-type", "text/plain"]]
 				body = b'Entry Does Not Exist'
-			# this is a POST request
+		# this is a POST request
 		elif(urlSplit[0] == "post"):
 			filepath = directory.database + "/" + data['id']
 			# attempt to create the file
@@ -56,6 +58,12 @@ class Landingpage(webpage.Webpage):
 				status = HTTPStatus.CONFLICT
 				header = [["content-type", "text/plain"]]
 				body = b'Unable to process request'
+		# call for the license
+		elif(urlSplit[0] == "license"):
+			filepath = directory.www + "/LICENSE.html"
+			status = HTTPStatus.OK
+			header = [["content-type", "text/html"]]
+			body = accessFile.readFile(filepath, directory.base)
 		else:
 			return None
 
