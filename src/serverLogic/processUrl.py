@@ -84,7 +84,7 @@ def readUrl(url, query, data):
 					body = accessFile.readFile(directory.www + "/404.html", directory.www)
 
 		# if not loading a file the loading a page
-		# NOTE: start at 1 because "/" splites to ['', '']
+		# NOTE: remove first element because "/page" splits to ['', 'page']
 		else:
 			response = pageIndex.process(urlSplit[1:], query, data)
 			if(response != None):

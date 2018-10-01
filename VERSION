@@ -4,6 +4,9 @@
           major.minor.stable.unstable
 ===============================================
 
+v0.0.2.5 - Change Webpage Constructor
+change: webpage name/path construction
+
 v0.0.2.4 - Minor Fixes
 fix: reference to stored data in pageIndex
 fix: set background color in css

@@ -20,12 +20,15 @@ from serverLogic import pageIndex
 # to call this classes functions during processing use the funciton process()
 
 class Webpage():
-	indexPath = None
+	pagePath = None
 	pageName = None
 
-	def __init__(self, name, path):
-		self.indexPath = path
+	# set the name and path of the page
+	# name (str) - the name of the folder containing the page
+	# parentPath (str) - the parent path of name
+	def __init__(self, name, parentPath):
 		self.pageName = name
+		self.pagePath = parentPath + '/' + name
 
 	# do not override
 	# this function should only be called internally
@@ -33,7 +36,7 @@ class Webpage():
 		print(urlSplit)
 		if(urlSplit[0] == self.pageName):
 			print("loading Index.html")
-			filepath = directory.www + self.indexPath + "/index.html"
+			filepath = directory.www + self.pagePath + "/index.html"
 			status = HTTPStatus.OK
 			header = [["content-type", "text/html"]]
 			body = accessFile.readFile(filepath, directory.www)
@@ -61,7 +64,7 @@ class Webpage():
 		if(response == None):
 			response = self._notFound()
 		if(response == None):
-			print("ERROR: 500 - Internal Server Error: {} no action taken and neither index.html nor 404.html found".format(self.indexPath))
+			print("ERROR: 500 - Internal Server Error: {} no action taken and neither index.html nor 404.html found".format(self.pagePath))
 			response = Response(HTTPStatus.INTERNAL_SERVER_ERROR, [["content-type", "text/plain"]], b'500 - Internal Server Error')
 
 		return response

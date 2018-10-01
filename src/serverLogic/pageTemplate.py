@@ -10,7 +10,6 @@ from directoryIndex import accessFile
 from response import Response
 
 from serverLogic import webpage
-from serverLogic import pageIndex
 
 # webpage are responsible for loading their index.html 
 # and performing any actions associated with the page
@@ -18,12 +17,15 @@ from serverLogic import pageIndex
 # this file is a template file to be copied
 # performAction() is to be overloaded with all the actions the page is to perform
 
+# This class will attempt to load an index.html if the url part matches its name.
+# If not the above it will then attempt to perform actions through the perfromAction function.
+# If not the above it will then attempt to load a 404.html
+# If not the above it will return a plain text 500 internal server error
 # HOW TO USE:
 # create this class with: myPage = MyPage(name, path)
-# name (str) - the name of the page to be used as an internal identifier
-# path (str) - the filepath to this pages index.html
-#              this will also determine the url request path to get this page
-#
+# name (str) - the name of the folder containing this page's index.html
+# path (str) - the parent path of name
+#              NOTE: path + name must lead to the page's index.html
 # to call this classes functions during processing call 
 # the inherited function: myPage.process(urlSplit, query, data)
 class PageTemplate(webpage.Webpage):

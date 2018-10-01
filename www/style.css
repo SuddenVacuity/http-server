@@ -25,6 +25,10 @@ div {
 	margin-bottom: 20px;
 }
 
+a {
+	color: blue;
+}
+
 #redtext {
 	color: red;
 }
