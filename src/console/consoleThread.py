@@ -4,7 +4,8 @@ in the file "LICENSE" located in the project base directory.
 '''
 
 import threading
-import _thread # used to quit main thread
+
+from console import command
 
 userInput = ""
 inputLock = threading.Event()
@@ -28,13 +29,7 @@ class ProcessInputThread(threading.Thread):
 		message = userInput
 		inputLock.clear()
 
-		# handle input here
-		print("You entered:", message)
-		if(userInput == "quit"):
-			print("quitting")
-			# this was the only simple way I could find to quit that allowed the main thread perform its shutdown process
-			# the interrupt is treated as a KeyboardInterrupt exception
-			_thread.interrupt_main()
+		command.process(message)
 
 def start():
 	takeInput = TakeInputThread()
