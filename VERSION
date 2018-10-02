@@ -4,6 +4,9 @@
           major.minor.stable.unstable
 ===============================================
 
+v0.0.3.1 - Start Adding Simple Command Terminal
+add: threads for collecting and processing terminal input
+
 v0.0.3.0 - Subpages Stable
 fix: error in page path generation
 change: html edits

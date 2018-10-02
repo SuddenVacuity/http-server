@@ -9,6 +9,7 @@ import json
 
 import server
 import config
+from console import consoleThread
 from directoryIndex import accessFile
 from directoryIndex import directory
 
@@ -39,6 +40,9 @@ if __name__ == "__main__":
 	directory.setBaseDirectory(config.getKeyValue("baseDirectory"))
 	HOST = config.getKeyValue("ip4host")
 	PORT = config.getKeyValue("port")
+
+	# start waiting for console input
+	consoleThread.start()
 
 	# run server
 	server.run(HOST, PORT)

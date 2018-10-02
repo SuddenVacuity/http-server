@@ -6,7 +6,7 @@ Overview:
         Public:      Items in the www folder are available to anyone that requests for it by its path.
 
 Dependencies: 
-    python3.6+
+    python3.7+
     python3-bcrpyt
 
 Setup:
