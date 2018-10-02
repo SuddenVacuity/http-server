@@ -22,7 +22,6 @@ from serverLogic import pageIndex
 
 class Subpage(webpage.Webpage):
 	def performAction(self, urlSplit, query, data):
-		print("{} >> urlsplit: {}, query: {},  data:{}".format(self.pageName, urlSplit, query, data))
 		# check if calling subpage
 		if(urlSplit[0] == "subpage2"):
 			response = pageIndex.pages["subpage2"].process(urlSplit, query, data)

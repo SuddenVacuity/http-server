@@ -65,7 +65,6 @@ def readUrl(url, query, data):
 		if(len(fileSplit) > 1):
 			# check if requesting favicon
 			if(fileSplit[0] == "favicon"):
-				print("Loading favicon:", fileSplit)
 				status = HTTPStatus.OK
 				header = [["content-type", "image/gif"]]
 				body = accessFile.readFile(directory.www + "/favicon.gif", directory.www)

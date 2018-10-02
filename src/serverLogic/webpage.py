@@ -24,20 +24,18 @@ class Webpage():
 	pageName = None
 
 	# set the name and path of the page
-	# name (str) - the name of the folder containing the page
-	# parentPath (str) - the parent path of name
-	def __init__(self, parentPath, name):
-		self.pagePath = parentPath + name
+	# name (str) - the name that will be added to the url to request this page
+	# path (str) - path to the folder containing the page's index.html
+	def __init__(self, name, path):
 		self.pageName = name
+		self.pagePath = path
 
 	# do not override
 	# this function should only be called internally
 	def _loadIndex(self, urlSplit):
-		print(urlSplit)
 
 		if(urlSplit[0] == self.pageName):
-			print("loading Index.html")
-			filepath = directory.www + self.pagePath + "/index.html"
+			filepath = directory.www + self.pagePath + "index.html"
 			status = HTTPStatus.OK
 			header = [["content-type", "text/html"]]
 			body = accessFile.readFile(filepath, directory.www)

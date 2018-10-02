@@ -22,7 +22,6 @@ from serverLogic import pageIndex
 
 class Landingpage(webpage.Webpage):
 	def performAction(self, urlSplit, query, data):
-		print("{} >> urlsplit: {}, query: {},  data:{}".format(self.pageName, urlSplit, query, data))
 
 		response = None
 
