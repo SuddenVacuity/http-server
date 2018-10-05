@@ -4,6 +4,16 @@
           major.minor.stable.unstable
 ===============================================
 
+v0.0.4.0 - Create Window Interface
+add: window with status/display/input frames
+add: text to status frame
+add: text and text entry box to the input frame
+add: canvas.frame.text object tree to display frame
+add: scrollbar to display frame
+add: window resizing
+add: autoscroll as text is added to display frames text
+add: auto text wrapping to text in display frame
+
 v0.0.3.2 - Console Fix and Restructure
 add: seperate module to interpret console commands
 fix: race condition due do to incorrect reference
