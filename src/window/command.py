@@ -11,13 +11,22 @@ from window import frames
 
 # this is the text given when "help" is called
 _helpText = "For any @command you can call .help for more information.\
-			\rCommands:\
-			\r  @config\
-			\r     Access configuration options\
-			\r  help\
-			\r     Display help text\
-			\r  quit\
-			\r     Close the program"
+	\r  Commands:\
+	\r  @config\
+	\r     Access configuration options\
+	\r  help\
+	\r     Display help text\
+	\r  quit\
+	\r     Close the program"
+
+
+# the config help text shown in the gui
+_configHelpText = "Use this command to access configuration options \
+	\r  Commands:\
+	\r  @config.read.key\
+	\r     Get the value of [key] from the current configuration\
+	\r  @config.set.key=value\
+	\r     Set the current configuration option [key] to [value]"
 
 # wrapper function so the output method is only referenced once
 def _displayText(text, begin="\n>> ", end=""):
@@ -64,6 +73,6 @@ def _processConfig(commandSplit):
 		value = config.getKeyValue(commandSplit[1])
 		_displayText("Read Config: {0}={1}".format(commandSplit[1], value))
 	elif(commandSplit[0] == "help"):
-		_displayText(config.help())
+		_displayText(_configHelpText)
 	else:
 		_displayText("invalid @config command; call \"@config.help\" for more information")

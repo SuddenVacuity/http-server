@@ -4,6 +4,9 @@
           major.minor.stable.unstable
 ===============================================
 
+v0.0.4.3 - Move Config Help Text
+change: move config help text to command.py
+
 v0.0.4.2 - Windowed Interface Integration
 add: store a reference to the main frame object for external use
 add: seperate thread to run the server
