@@ -8,6 +8,7 @@ import socket
 import socketserver
 import urllib
 import json
+import threading
 from cgi import parse_header, parse_multipart
 
 import processRequest
@@ -95,14 +96,20 @@ class server(http.server.BaseHTTPRequestHandler):
 		self.respond(response.status, response.body, response.header)
 
 
+class ThreadedServer(threading.Thread):
+	def __init__(self, host="127.0.0.1", port=80):
+		threading.Thread.__init__(self)
+		self.daemon = True
+		self.port = port
+		self.host = host
 
-def run(host="127.0.0.1", port=80):
-	Handler = server
-	with socketserver.TCPServer((host, port), Handler) as httpd:
-		print("HOST: {0}\nPORT: {1}\nListening...".format(host, port))
-		try:
-			httpd.serve_forever()
-		except KeyboardInterrupt:
-			httpd.shutdown()
-			httpd.server_close()
-			quit()
+	def run(self):
+		Handler = server
+		with socketserver.TCPServer((self.host, self.port), Handler) as httpd:
+			print("HOST: {0}\nPORT: {1}\nListening...".format(self.host, self.port))
+			try:
+				httpd.serve_forever()
+			except KeyboardInterrupt:
+				httpd.shutdown()
+				httpd.server_close()
+				quit()

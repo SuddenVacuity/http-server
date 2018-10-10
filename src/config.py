@@ -28,6 +28,14 @@ def _setDefault():
 	_values["ip4host"] = "127.0.0.1"
 	_values["port"] = 80
 
+def help():
+	return "Use this command to access configuration options \
+		\r  Commands:\
+		\r  @config.read.key\
+		\r     Get the value of [key] from the current configuration\
+		\r  @config.set.key=value\
+		\r     Set the current configuration option [key] to [value]"
+
 # loads the config.json file and imports all key/value pairs to memory
 # RETURNS: (bool) succcess
 def importConfigFile():

@@ -9,10 +9,15 @@ except:
 	print("WARNING: module \"tkinter\" not found. Trying to load older version \"Tkinter\"")
 	try:
 		import Tkinter as tk
+		from Tkinter import font
 		print("WARNING: using old version Tkinter; the application may not function properly")
 	except:
 		print("ERROR: No version of module tkinter is available")
 		quit()
+
+import threading
+
+from window import command
 
 # This class must me initailized using a tk.Tk() object
 # The window this creates has 3 main frames
@@ -24,16 +29,23 @@ except:
 #                  process the window is an interface for.
 #
 # Functions intended to be called externally:
+#    startGUI()
 #    setStatus(str)
 #    displayText(str)
 #    getCommand()
 #    clearDisplay()
+#    quit()
+
+mainFrame = None
 
 class Frames(tk.Frame):
 	# the maximum number of character that  can be displayed
 	# this is to prevent the buffer from taking all RAM when the program
 	#   is left runnign for long periods of time
 	DISPLAY_BUFFER_SIZE = 1024
+	statusLock = threading.Event()
+	displayLock = threading.Event()
+	commandLock = threading.Event()
 
 	# parent (tk.Tk()) - the tk object to contain the frames
 	# title (str) - the text that will be displayed in the title bar
@@ -94,7 +106,7 @@ class Frames(tk.Frame):
 		# OPTION: window (tk.FRAME()) - the frame that will be displayed
 		innerFrameId = self.display.canvas.create_window(0, 0, window=self.display.innerFrame, anchor="nw")
 		# create some content to be shows in the scrolling frame
-		self.display.text = tk.Label(self.display.innerFrame, font="Helvetica 18 bold", text="Display Window", justify="left")
+		self.display.text = tk.Label(self.display.innerFrame, font="Helvetica 8 bold", text="", justify="left")
 		self.display.text.grid(row=0, column=0, sticky="nswe")
 
 		#
@@ -102,7 +114,7 @@ class Frames(tk.Frame):
 		self.command = tk.Frame(self, background="green", borderwidth=4)
 		self.command.rowconfigure(0, weight=0)
 		self.command.columnconfigure(1, weight=1)
-		self.command.text = tk.Label(self.command, text="Enter some text:", anchor="nw", justify="left")
+		self.command.text = tk.Label(self.command, text="Enter a Command:", anchor="nw", justify="left")
 		self.command.entry = tk.Entry(self.command, justify="left")
 		self.command.text.grid(row=0, column=0)
 		self.command.entry.grid(row=0, column=1, sticky="we")
@@ -145,8 +157,8 @@ class Frames(tk.Frame):
 		# in a project commands should be received by getCmmand() and 
 		# text should be added to the display frame with displayText()
 		def _inputCommand(event):
-			txt = self.getCommand()
-			self.displayText(txt)
+			message = self.getCommand()
+			command.process(message)
 
 		self.command.entry.bind_all("<Return>", _inputCommand)
 
@@ -191,25 +203,36 @@ class Frames(tk.Frame):
 
 	# set the text displayed in the status bar
 	def setStatus(self, info):
+		if(self.statusLock.is_set() == True):
+			self.statusLock.wait()
+
+		self.statusLock.set()
 		self.status.text["text"] = info
+		self.statusLock.clear()
 
 	# get the text currently entered in the text entry then clear the netry
 	# RETURNS: (str) command
 	def getCommand(self):
-		cmd = self.command.entry.get()
+		if(self.commandLock.is_set() == True):
+			self.commandLock.wait()
 
-		# clear the command entry box
+		self.commandLock.set()
+		cmd = self.command.entry.get()
 		self.command.entry.delete(0, tk.END)
+		self.commandLock.clear()
+
 		return cmd
 
 	# add text to the end the text currently stored in the display frame
 	# addText (str) - the text that will be added
 	# begin (str) - a string that gets placed at the beginning of addText
 	# end (str) - a string that gets placed at the end of addText
-	def displayText(self, addText, begin='\n >', end=''):
-		print("You Entered:", addText)
+	def displayText(self, addText, begin='\n> ', end=''):
+		if(self.displayLock.is_set() == True):
+			self.displayLock.wait()
 
 		# get the old text and add the new text
+		self.displayLock.set()
 		currentText = self.display.text["text"]
 		currentText = currentText + begin + addText + end
 
@@ -233,23 +256,40 @@ class Frames(tk.Frame):
 
 		# apply the new text to the display text
 		self.display.text["text"] = currentText
+		self.displayLock.clear()
 
 	# clears all text from the display window
 	def clearDisplay(self):
-		self.display.text["text"] = ""
+		if(self.displayLock.is_set() == True):
+			self.displayLock.wait()
 
-if __name__ == "__main__":
+		self.displayLock.set()
+		self.display.text["text"] = ""
+		self.displayLock.clear()
+
+	def quit(self):
+		quit()
+
+def startGUI(title, statusText="", displayText="Start up"):
+	global mainFrame
+
+	if(mainFrame != None):
+		return
+
 	root = tk.Tk()
 
 	root.rowconfigure(0, weight=1, minsize=0)
 	root.columnconfigure(0, weight=1, minsize=0)
 
-	Frames(root, "Example Window").grid(row=0, column=0)
+	Frames(root, title).grid(row=0, column=0)
 
 	# get a reference to the main Frames() object
 	# change the name="" in Frame().__init__() to use a different name
-	frame = root.nametowidget("main")
-	frame.setStatus("Status: running")
-	frame.displayText("Text From __main__()", begin="\n###  ", end="  ###")
+	mainFrame = root.nametowidget("main")
+	mainFrame.displayText(displayText, begin="")
+	mainFrame.setStatus(statusText)
 
 	root.mainloop()
+
+if __name__ == "__main__":
+	startGUI("Example Window", "Status: Testing", "Text From __main__()")

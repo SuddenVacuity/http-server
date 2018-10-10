@@ -9,8 +9,8 @@ import json
 
 import server
 import config
-from console import consoleThread
-from directoryIndex import accessFile
+
+from window import frames
 from directoryIndex import directory
 
 if __name__ == "__main__":
@@ -41,9 +41,11 @@ if __name__ == "__main__":
 	HOST = config.getKeyValue("ip4host")
 	PORT = config.getKeyValue("port")
 
-	# start waiting for console input
-	consoleThread.start()
-
 	# run server
-	server.run(HOST, PORT)
+	server = server.ThreadedServer(HOST, PORT)
+	server.start()
+
+	# start waiting for console input
+	frames.startGUI("HTTP Server", "STATUS: Startup - HOST: {0}:{1}".format(HOST, PORT))
+
 	quit()

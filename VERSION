@@ -4,6 +4,16 @@
           major.minor.stable.unstable
 ===============================================
 
+v0.0.4.2 - Windowed Interface Integration
+add: store a reference to the main frame object for external use
+add: seperate thread to run the server
+add: support for threaded operations on windowed interface
+add: targeted commands with branching paths to command.py
+add: help, quit and config commands
+fix: run main gui on the main thread
+change: move command.py to window module
+remove: console module
+
 v0.0.4.1 - Inline Documentation and Minor Fixes
 add: inline documentation
 fix: add text to status frame
