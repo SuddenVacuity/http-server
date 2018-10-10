@@ -4,6 +4,11 @@
           major.minor.stable.unstable
 ===============================================
 
+v0.0.5.0 - Windowed Interface Stable
+add: inline documentation
+fix: logical branch error in command.py
+change: update README.md
+
 v0.0.4.3 - Move Config Help Text
 change: move config help text to command.py
 

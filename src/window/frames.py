@@ -19,6 +19,9 @@ import threading
 
 from window import command
 
+# This class is responsible for displaying internal information and 
+# accepting operator commands.
+
 # This class must me initailized using a tk.Tk() object
 # The window this creates has 3 main frames
 #   Status Frame: This should contain status about the process the 
@@ -43,6 +46,8 @@ class Frames(tk.Frame):
 	# this is to prevent the buffer from taking all RAM when the program
 	#   is left runnign for long periods of time
 	DISPLAY_BUFFER_SIZE = 1024
+
+	# thread locks used to prevent read/write to data that is currently being read/written to
 	statusLock = threading.Event()
 	displayLock = threading.Event()
 	commandLock = threading.Event()
@@ -152,10 +157,9 @@ class Frames(tk.Frame):
 		#    EVENT BINDINGS   #
 		# # # # # # # # # # # #
 
-		# add the text in the command entry to the display window
-		# test function for developement
-		# in a project commands should be received by getCmmand() and 
-		# text should be added to the display frame with displayText()
+		# gets the text currently in the tk text entry then clears the entry.
+		# The text is then processed as a command.
+		# this runs whenever the return key is pressed
 		def _inputCommand(event):
 			message = self.getCommand()
 			command.process(message)
@@ -270,6 +274,9 @@ class Frames(tk.Frame):
 	def quit(self):
 		quit()
 
+# initializes tkinter root frame then sets the resulting frame as frames.mainFrame.
+# The gui main loop is then started
+# this is meant to be run once
 def startGUI(title, statusText="", displayText="Start up"):
 	global mainFrame
 

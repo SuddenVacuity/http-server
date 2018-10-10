@@ -59,3 +59,10 @@ Creating Wepages With Custom Logic:
         www/targetpage/index.html         >> YourWebpage("/", "targetpage") 
         www/subpage/targetpage/index.html >> YourWebpage("/subpage/", "targetpage")
     Call the page where needed through pageIndex.pages[key].process(..)
+
+Using the Command Interface:
+    There are 3 sections the the windowed interface. The status bar, the output display and the command entry.
+    The status and output displays are to display relevent information to the user of the interface.
+    Commands can be entered into the interface to perform various actions.
+        Configuration options can be added, changed and read but this currently has no effect.
+        Currently the only useful function of the interface is to quit the program.

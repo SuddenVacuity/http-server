@@ -36,21 +36,32 @@ def _displayText(text, begin="\n>> ", end=""):
 def _quit():
 	frames.mainFrame.quit()
 
+# The first layer of processing an entered command. This determines the 
+#   target of a command. Once the target has been determined the command 
+#   arguments relevant to the target are passed to the relevant function
+# command (str) - the command string to be processed
 def process(command):
 	# handle input here
 	_displayText(command, begin="\n<< ")
 	if(command == None):
 		return
 
+	# check if the command is targeted
 	if(command.startswith("@") == True):
+		# remove the target token
 		command = command.lstrip("@")
+		# remove and leading/trailing argument tokens
 		command = command.strip(".")
+		# split the arguments into a list
 		commandSplit = command.split(".")
-
+		# get the number of elements in the list
 		splitLength = len(commandSplit)
+
+		# if config is targeted
 		if(commandSplit[0] == "config"):
 			_processConfig(commandSplit[1:])
 
+	# non-targeted commands
 	elif(command == "help"):
 		_displayText(_helpText)
 	elif(command == "quit"):
@@ -58,21 +69,26 @@ def process(command):
 		print("Exit Program")
 		_quit()
 	else:
-		_displayText("You Entered:" + command)
+		_displayText("Invalid command; call \"help\" for more information")
 
+# The layer of processing that handles commands that target config
+# commandSplit ([(str), ...]) - a list of strings that are the result of command.split()
+#                               NOTE: list elements that were processed by the previous layer are removed
 def _processConfig(commandSplit):
-	if(commandSplit[0] == "set"):
-		keyValue = ""
-		if(len(commandSplit) == 2):
+	# start checking if command is valid
+	if(len(commandSplit) == 2):
+		if(commandSplit[0] == "set"):
 			keyValue = commandSplit[1].split("=")
 			config.setKeyValue(keyValue[0], keyValue[1])
 			_displayText("Set Config: {0}={1}".format(keyValue[0], keyValue[1]))
 		else:
 			_displayText("Invalid key/value pair. use: @config.set.key=value")
-	elif(commandSplit[0] == "read"):
-		value = config.getKeyValue(commandSplit[1])
-		_displayText("Read Config: {0}={1}".format(commandSplit[1], value))
+		if(commandSplit[0] == "read"):
+			value = config.getKeyValue(commandSplit[1])
+			_displayText("Read Config: {0}={1}".format(commandSplit[1], value))
+		else:
+			_displayText("Invalid read command. use: @config.read.key")
 	elif(commandSplit[0] == "help"):
 		_displayText(_configHelpText)
 	else:
-		_displayText("invalid @config command; call \"@config.help\" for more information")
+		_displayText("Invalid @config command; call \"@config.help\" for more information")

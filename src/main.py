@@ -45,7 +45,7 @@ if __name__ == "__main__":
 	server = server.ThreadedServer(HOST, PORT)
 	server.start()
 
-	# start waiting for console input
+	# open gui and start taking operator input
 	frames.startGUI("HTTP Server", "STATUS: Startup - HOST: {0}:{1}".format(HOST, PORT))
 
 	quit()
