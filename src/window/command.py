@@ -78,15 +78,14 @@ def _processConfig(commandSplit):
 	if(len(commandSplit) == 2):
 		if(commandSplit[0] == "set"):
 			keyValue = commandSplit[1].split("=")
-			config.setKeyValue(keyValue[0], keyValue[1])
-			_displayText("Set Config: {0}={1}".format(keyValue[0], keyValue[1]))
-		else:
-			_displayText("Invalid key/value pair. use: @config.set.key=value")
+			if(len(keyValue) == 2):
+				config.setKeyValue(keyValue[0], keyValue[1])
+				_displayText("Set Config: {0}={1}".format(keyValue[0], keyValue[1]))
+			else:
+				_displayText("Invalid key/value pair. use: @config.set.key=value")
 		if(commandSplit[0] == "read"):
 			value = config.getKeyValue(commandSplit[1])
 			_displayText("Read Config: {0}={1}".format(commandSplit[1], value))
-		else:
-			_displayText("Invalid read command. use: @config.read.key")
 	elif(commandSplit[0] == "help"):
 		_displayText(_configHelpText)
 	else:

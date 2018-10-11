@@ -179,7 +179,7 @@ class Frames(tk.Frame):
 		#       when another module is waiting for input
 		def _inputCommand(event):
 			if(self._waitLock.is_set() == True):
-				message = self.getCommand()
+				message = self._getCommand()
 				command.process(message)
 			else:
 				self._waitLock.set()

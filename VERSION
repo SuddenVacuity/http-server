@@ -4,6 +4,10 @@
           major.minor.stable.unstable
 ===============================================
 
+v0.0.5.2 - Minor Fixes
+fix: update missed call to new function name
+fix: command.py printing false error when calling read/set config
+
 v0.0.5.1 - Thread Server and Windowed Interface
 add: multi-thread support to server
 add: feedback to windowed interface
