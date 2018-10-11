@@ -4,6 +4,14 @@
           major.minor.stable.unstable
 ===============================================
 
+v0.0.5.1 - Thread Server and Windowed Interface
+add: multi-thread support to server
+add: feedback to windowed interface
+fix: interface now waits for user input when requested by the program
+change: asset loading and gui display happen at the same time
+change: variable and function names
+remove: un-needed prints to terminal
+
 v0.0.5.0 - Windowed Interface Stable
 add: inline documentation
 fix: logical branch error in command.py

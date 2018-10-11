@@ -65,8 +65,7 @@ def process(command):
 	elif(command == "help"):
 		_displayText(_helpText)
 	elif(command == "quit"):
-			# do shutdown operations here
-		print("Exit Program")
+		# do shutdown operations here
 		_quit()
 	else:
 		_displayText("Invalid command; call \"help\" for more information")

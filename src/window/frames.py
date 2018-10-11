@@ -32,11 +32,12 @@ from window import command
 #                  process the window is an interface for.
 #
 # Functions intended to be called externally:
-#    startGUI()
+#    init()
+#    mainloop()
 #    setStatus(str)
 #    displayText(str)
-#    getCommand()
 #    clearDisplay()
+#    awaitInput()
 #    quit()
 
 mainFrame = None
@@ -45,12 +46,25 @@ class Frames(tk.Frame):
 	# the maximum number of character that  can be displayed
 	# this is to prevent the buffer from taking all RAM when the program
 	#   is left runnign for long periods of time
-	DISPLAY_BUFFER_SIZE = 1024
+	_DISPLAY_BUFFER_SIZE = 1024
+
+	# thread lock used to determine when a module other that command.py is waiting for input
+	# NOTE: This get cleared by awaitInput() reset by _inputCommand(event)
+	# NOTE: If this is set it command.process() runs and clears the entry.
+	#       If this is clear command.process() is not run because another module is 
+	#         waiting for a command.
+	_waitLock = threading.Event()
 
 	# thread locks used to prevent read/write to data that is currently being read/written to
-	statusLock = threading.Event()
-	displayLock = threading.Event()
-	commandLock = threading.Event()
+	_statusLock = threading.Event()
+	_displayLock = threading.Event()
+	_commandLock = threading.Event()
+
+	def _on_exit(self):
+		# do shutdown operations in command.py
+		print("Exit Program Gracefully")
+		self.winfo_toplevel().destroy()
+		quit()
 
 	# parent (tk.Tk()) - the tk object to contain the frames
 	# title (str) - the text that will be displayed in the title bar
@@ -60,6 +74,7 @@ class Frames(tk.Frame):
 		#   from outside the class
 		tk.Frame.__init__(self, parent, background="gray", name="main")
 		self.winfo_toplevel().title(title)
+		parent.protocol("WM_DELETE_WINDOW", self._on_exit)
 
 		# configure the rows and columns for the main window
 		self.grid(sticky="nswe")
@@ -160,9 +175,14 @@ class Frames(tk.Frame):
 		# gets the text currently in the tk text entry then clears the entry.
 		# The text is then processed as a command.
 		# this runs whenever the return key is pressed
+		# NOTE: normal proccessing of commands is skipped 
+		#       when another module is waiting for input
 		def _inputCommand(event):
-			message = self.getCommand()
-			command.process(message)
+			if(self._waitLock.is_set() == True):
+				message = self.getCommand()
+				command.process(message)
+			else:
+				self._waitLock.set()
 
 		self.command.entry.bind_all("<Return>", _inputCommand)
 
@@ -205,46 +225,52 @@ class Frames(tk.Frame):
 	#   CLASS FUNCTIONS   #
 	# # # # # # # # # # # #
 
-	# set the text displayed in the status bar
-	def setStatus(self, info):
-		if(self.statusLock.is_set() == True):
-			self.statusLock.wait()
-
-		self.statusLock.set()
-		self.status.text["text"] = info
-		self.statusLock.clear()
-
 	# get the text currently entered in the text entry then clear the netry
 	# RETURNS: (str) command
-	def getCommand(self):
-		if(self.commandLock.is_set() == True):
-			self.commandLock.wait()
+	def _getCommand(self):
+		if(self._commandLock.is_set() == True):
+			self._commandLock.wait()
 
-		self.commandLock.set()
+		self._commandLock.set()
 		cmd = self.command.entry.get()
 		self.command.entry.delete(0, tk.END)
-		self.commandLock.clear()
 
 		return cmd
+
+	# set the text displayed in the status bar
+	def setStatus(self, info):
+		if(self._statusLock.is_set() == True):
+			self._statusLock.wait()
+
+		self._statusLock.set()
+		self.status.text["text"] = info
+		self._statusLock.clear()
+
+	# blocks the normal command process and waits for user input
+	# RETURNS: (str) the next command entered by the user
+	def awaitInput(self):
+		self._waitLock.clear()
+		self._waitLock.wait()
+		return self._getCommand()
 
 	# add text to the end the text currently stored in the display frame
 	# addText (str) - the text that will be added
 	# begin (str) - a string that gets placed at the beginning of addText
 	# end (str) - a string that gets placed at the end of addText
 	def displayText(self, addText, begin='\n> ', end=''):
-		if(self.displayLock.is_set() == True):
-			self.displayLock.wait()
+		if(self._displayLock.is_set() == True):
+			self._displayLock.wait()
 
 		# get the old text and add the new text
-		self.displayLock.set()
+		self._displayLock.set()
 		currentText = self.display.text["text"]
 		currentText = currentText + begin + addText + end
 
 		# trim text if its too long
 		size = len(currentText)
-		if(size > self.DISPLAY_BUFFER_SIZE):
+		if(size > self._DISPLAY_BUFFER_SIZE):
 			# find the place where the text must be trimmed to fit within the buffer
-			startSearchPos = size - self.DISPLAY_BUFFER_SIZE
+			startSearchPos = size - self._DISPLAY_BUFFER_SIZE
 			# start searching for the next newline to determine where the text will be trimmed
 			trimIndex = currentText.find('\n', startSearchPos, size)
 
@@ -260,24 +286,22 @@ class Frames(tk.Frame):
 
 		# apply the new text to the display text
 		self.display.text["text"] = currentText
-		self.displayLock.clear()
+		self._displayLock.clear()
 
 	# clears all text from the display window
 	def clearDisplay(self):
-		if(self.displayLock.is_set() == True):
-			self.displayLock.wait()
+		if(self._displayLock.is_set() == True):
+			self._displayLock.wait()
 
-		self.displayLock.set()
+		self._displayLock.set()
 		self.display.text["text"] = ""
-		self.displayLock.clear()
+		self._displayLock.clear()
 
 	def quit(self):
-		quit()
+		self._on_exit()
 
 # initializes tkinter root frame then sets the resulting frame as frames.mainFrame.
-# The gui main loop is then started
-# this is meant to be run once
-def startGUI(title, statusText="", displayText="Start up"):
+def init(title, statusText="", displayText="Starting up"):
 	global mainFrame
 
 	if(mainFrame != None):
@@ -296,7 +320,10 @@ def startGUI(title, statusText="", displayText="Start up"):
 	mainFrame.displayText(displayText, begin="")
 	mainFrame.setStatus(statusText)
 
-	root.mainloop()
+# starts the gui main loop
+def mainloop():
+	global mainFrame
+	mainFrame.winfo_toplevel().mainloop()
 
 if __name__ == "__main__":
 	startGUI("Example Window", "Status: Testing", "Text From __main__()")

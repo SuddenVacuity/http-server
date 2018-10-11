@@ -46,7 +46,6 @@ def importConfigFile():
 			_values[key] = configDict[key]
 
 	except:
-		print("Import config.json failed.")
 		_setDefault()
 		return False
 

@@ -9,21 +9,30 @@ import json
 
 import server
 import config
+import threading
 
 from window import frames
 from directoryIndex import directory
 
-if __name__ == "__main__":
+# initialization function to be run on a seperate thread
+# in order to allow the gui to be run as the rest of the program is starting up
+def init():
 	# load the config file from storage
 	if(config.importConfigFile() != True):
+		frame.displayText("Import config.json failed.", begin="\nWARNING > ")
+
 		while True:
-			userinput = input("Continue using default values? y/n >> ").lower()
-			if(userinput.lower() == 'y'):
+			frame.displayText("Continue using default values? y/n")
+			
+			userInput = frame.awaitInput().lower()
+			frame.displayText(userInput, begin="\n<< ")
+
+			if(userInput.lower() == 'y'):
 				break
-			elif(userinput.lower() == 'n'):
+			elif(userInput.lower() == 'n'):
 				quit()
 			else:
-				print("Invalid input")
+				frame.displayText("Invalid input")
 
 	# override defaults/config with command line arguments
 	if(len(sys.argv) > 1):
@@ -31,10 +40,10 @@ if __name__ == "__main__":
 		for arg in args:
 			keyValue = arg.split("=")
 			if(len(keyValue) != 2):
-				print("WARNING: Invalid argument {0}".format(arg))
+				frame.displayText("WARNING: Invalid argument {0}".format(arg))
 				continue
 			config.setKeyValue(keyValue[0], keyValue[1])
-			print("Set config from argument: {0}".format(arg))
+			frame.displayText("Set config from argument: {0}".format(arg))
 
 	# apply config values to the server
 	directory.setBaseDirectory(config.getKeyValue("baseDirectory"))
@@ -42,10 +51,21 @@ if __name__ == "__main__":
 	PORT = config.getKeyValue("port")
 
 	# run server
-	server = server.ThreadedServer(HOST, PORT)
-	server.start()
+	_server = server.ThreadedServer(HOST, PORT)
+	_server.start()
+
+	frame.setStatus("STATUS: Listening")
+	frame.displayText("Service Started on: {0}:{1}".format(HOST, PORT))
+
+if __name__ == "__main__":
+	frames.init("HTTP Server", "STATUS: Startup - HOST: None")
+	frame = frames.mainFrame
+
+	# start thread dhere
+	app = threading.Thread(target=init, daemon=True)
+	app.start()
 
 	# open gui and start taking operator input
-	frames.startGUI("HTTP Server", "STATUS: Startup - HOST: {0}:{1}".format(HOST, PORT))
+	frames.mainloop()
 
 	quit()

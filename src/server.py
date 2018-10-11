@@ -102,12 +102,22 @@ class ThreadedServer(threading.Thread):
 		self.daemon = True
 		self.port = port
 		self.host = host
+		# support for threading requests
+		# https://stackoverflow.com/a/46224191
+		self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+		self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+		self.sock.bind((host, port))
+		self.sock.listen(5)
 
 	def run(self):
 		Handler = server
-		with socketserver.TCPServer((self.host, self.port), Handler) as httpd:
-			print("HOST: {0}\nPORT: {1}\nListening...".format(self.host, self.port))
+		with socketserver.TCPServer((self.host, self.port), Handler, False) as httpd:
 			try:
+				# Prevent the HTTP server from re-binding every handler.
+        		# https://stackoverflow.com/questions/46210672/
+				httpd.socket = self.sock
+				httpd.server_bind = self.server_close = lambda self: None
+
 				httpd.serve_forever()
 			except KeyboardInterrupt:
 				httpd.shutdown()
