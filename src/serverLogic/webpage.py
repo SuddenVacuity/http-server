@@ -37,7 +37,7 @@ class Webpage():
 		if(urlSplit[0] == self.pageName):
 			filepath = directory.www + self.pagePath + "index.html"
 			status = HTTPStatus.OK
-			header = [["content-type", "text/html"]]
+			header = [("content-type", "text/html")]
 			body = accessFile.readFile(filepath, directory.www)
 
 			return Response(status, header, body)
@@ -48,7 +48,7 @@ class Webpage():
 	# this function should only be called internally
 	def _notFound(self):
 		status = HTTPStatus.NOT_FOUND
-		header = [["content-type", "text/html"]]
+		header = [("content-type", "text/html")]
 		body = accessFile.readFile(directory.www + "/404.html", directory.www)
 
 		return Response(status, header, body)
@@ -67,7 +67,7 @@ class Webpage():
 			response = self._notFound()
 		if(response == None):
 			print("ERROR: 500 - Internal Server Error: {} no action taken and neither index.html nor 404.html found".format(self.pagePath))
-			response = Response(HTTPStatus.INTERNAL_SERVER_ERROR, [["content-type", "text/plain"]], b'500 - Internal Server Error')
+			response = Response(HTTPStatus.INTERNAL_SERVER_ERROR, [("content-type", "text/plain")], b'500 - Internal Server Error')
 
 		return response
 

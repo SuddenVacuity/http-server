@@ -3,6 +3,7 @@ This file is subject to the terms and conditions found
 by requesting "/license" or in the file "LICENSE" located 
 in the server source files base directory.
 -->
+ <meta charset="UTF-8"> 
 <html>
 <head>
 	<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.18.1/build/cssreset/cssreset-min.css">
@@ -15,6 +16,21 @@ in the server source files base directory.
 		<br><a href="subpage">Load Subpage</a>
 		<br><a href="subpage/subpage2">Load Subpage/Subpage2</a>
 	</p>
+	<p>
+		Media Download
+		<br><a href="media/images/image.jpeg">Image</a>
+		<br><a href="media/audio/music.mp3">Music</a>
+		<br><a href="media/video/video.mp4">Video</a>
+	</p>
+	<br>
+	<br>
+	<p>
+		Test Upload Image
+	</p>
+	<form id="uploadForm" enctype="multipart/form-data", method="post", action="/file">
+		<input id="uploadinput" name="uploadFile" type="file" accept="image/jpeg"/>
+		<input type="submit" value="submit" id="submitFile"/>
+	</form>
 </div>
 
 <div>

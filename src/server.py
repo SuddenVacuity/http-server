@@ -16,7 +16,7 @@ import processRequest
 class server(http.server.BaseHTTPRequestHandler):
 	# create http response header
 	#	status - the http request status to be included in the header
-	#	*attributes - must be tuple(s) containing [attributeName, attributeValue]
+	#	*attributes - must be tuple(s) containing (attributeName, attributeValue)
 	#		the data in these tuple(s) must be standard name/value pairs for a http header
 	def _set_headers(self, status, attributes):
 		self.send_response(status)
@@ -41,7 +41,10 @@ class server(http.server.BaseHTTPRequestHandler):
 		ctype, pdict = parse_header(self.headers['content-type'])
 
 		# check for supported body data type
-		if ctype == 'application/json':
+		if ctype == 'multipart/form-data':
+			pdict["boundary"] = bytes(pdict['boundary'], "utf-8")
+			postvars = parse_multipart(self.rfile, pdict)
+		elif ctype == 'application/json':
 			postvars = json.loads(self.rfile.read(clength))
 		# media type not supported
 		else:
@@ -53,7 +56,7 @@ class server(http.server.BaseHTTPRequestHandler):
 	# creates and sends a header + body http request
 	#	status - the http request status to be included in the header
 	#	data - the data to be the http request body
-	#	*attributes - must be tuple(s) containing [attributeName, attributeValue]
+	#	*attributes - must be tuple(s) containing (attributeName, attributeValue)
 	#		the data in these tuple(s) must be standard name/value pairs for a http header
 	def respond(self, status, data, attributes):
 		self._set_headers(status, attributes)

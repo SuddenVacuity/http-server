@@ -4,6 +4,7 @@ in the file "LICENSE" located in the project base directory.
 '''
 
 from http import HTTPStatus
+import mimetypes
 
 from directoryIndex import directory
 from directoryIndex import accessFile
@@ -22,7 +23,6 @@ from serverLogic import pageIndex
 
 class Landingpage(webpage.Webpage):
 	def performAction(self, urlSplit, query, data):
-
 		response = None
 
 		# check if calling subpage
@@ -35,33 +35,47 @@ class Landingpage(webpage.Webpage):
 		# this page's functions
 		# this is a GET request
 		elif(urlSplit[0] == "get"):
-			filepath = directory.database + "/" + query
+			filepath = directory.database + "/" + query + ".txt"
 			status = HTTPStatus.OK
-			header = [["content-type", "text/plain"]]
+			mimeType = mimetypes.guess_type(filepath)
+			header = [("content-type", mimeType[0]), ("content-encoding", mimeType[1])]
 			body = accessFile.readFile(filepath, directory.database)
 			# if read data is empty
 			if(body == b''):
 				status = HTTPStatus.NOT_FOUND
-				header = [["content-type", "text/plain"]]
+				header = [("content-type", "text/plain")]
 				body = b'Entry Does Not Exist'
 		# this is a POST request
-		elif(urlSplit[0] == "post"):
-			filepath = directory.database + "/" + data['id']
+		elif(urlSplit[0] == "file"):
+			if(data == None):
+				return
+			filepath = directory.database + "/" + "test" + ".jpeg"
 			# attempt to create the file
-			if(accessFile.writeFile(filepath, data["value"], directory.database) == True):
+			if(accessFile.writeFile(filepath, data["uploadFile"][0], directory.database) == True):
+				status = HTTPStatus.NO_CONTENT
+				header = [("content-type", "text/plain")]
+				body = b''
+			else:
+				status = HTTPStatus.CONFLICT
+				header = [("content-type", "text/plain")]
+				body = b'Unable to process request'
+		elif(urlSplit[0] == "post"):
+			filepath = directory.database + "/" + data['id'] + ".txt"
+			# attempt to create the file
+			if(accessFile.writeFile(filepath, data["value"].encode(), directory.database) == True):
 				status = HTTPStatus.CREATED
-				header = [["content-type", "text/plain"]]
+				header = [("content-type", "text/plain")]
 				body = b'Successfully Created Entry'
 			# unable to write to file
 			else:
 				status = HTTPStatus.CONFLICT
-				header = [["content-type", "text/plain"]]
+				header = [("content-type", "text/plain")]
 				body = b'Unable to process request'
 		# call for the license
 		elif(urlSplit[0] == "license"):
 			filepath = directory.www + "/LICENSE.html"
 			status = HTTPStatus.OK
-			header = [["content-type", "text/html"]]
+			header = [("content-type", "text/html")]
 			body = accessFile.readFile(filepath, directory.base)
 		else:
 			return None

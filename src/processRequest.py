@@ -19,14 +19,14 @@ def _method_not_allowed():
 	data = accessFile.readFile("/405", self.query, None)
 	response = Response(
 		405, 
-		[["content-type", "text/html"]],
+		[("content-type", "text/html")],
 		data)
 	return response
 
 # this is out of date
 # leaving as a reference for when cookies are added
 def buildCookie():
-	c = ["Set-Cookie", "myData=1234#myData2=5555; Path=/; Max-Age=30"]
+	c = [("Set-Cookie", "myData=1234#myData2=5555; Path=/; Max-Age=30")]
 	#self.response.header = [self.response.header, c]
 
 def do_GET(requestUrl):

@@ -31,11 +31,11 @@ def readFile(filepath, basepath):
 		with open(filepath, 'rb') as f:
 			data = f.read()
 	except FileNotFoundError:
-		print("ERROR: fileLoader.py >> readFile(): File Does Not Exist.")
+		print("ERROR: accessFile.py >> readFile(): File Does Not Exist.")
 		print("Error File:", filepath)
 		data = b''
 	except:
-		print("ERROR: fileLoader.py >> readFile(): Unable to Read File.")
+		print("ERROR: accessFile.py >> readFile(): Unable to Read File.")
 		print("Error File:", filepath)
 		data = b''
 
@@ -51,12 +51,12 @@ def writeFile(filepath, data, basepath):
 		print("Illegal Write attempted on file:", filepath)
 		return False
 
-	print("Write File:", filepath, "\nWrite Data:", data)
+	print("Write File:", filepath)
 	try:
-		with open(filepath, 'w') as f:
+		with open(filepath, 'wb') as f:
 			f.write(data)
 	except:
-		print("ERROR: fileLoader.py >> writeFile(): Unable to Write to File")
+		print("ERROR: accessFile.py >> writeFile(): Unable to Write to File")
 		print("Error File:", filepath)
 		return False
 

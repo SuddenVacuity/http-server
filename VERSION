@@ -4,6 +4,12 @@
           major.minor.stable.unstable
 ===============================================
 
+v0.1.0.1 - Mime Types and Upload
+add: proper mime type handling
+add: rudimentary file upload handling (static name and jpeg only)
+fix: change headers from list of lists to list of tuples
+change: all data written is now bytes-type
+
 v0.0.5.2 - Minor Fixes
 fix: update missed call to new function name
 fix: command.py printing false error when calling read/set config

@@ -4,6 +4,7 @@ in the file "LICENSE" located in the project base directory.
 '''
 
 from http import HTTPStatus
+import mimetypes
 
 from directoryIndex import directory
 from directoryIndex import accessFile
@@ -14,19 +15,11 @@ from serverLogic import pageIndex
 # This file is responsible for every action the landing page can perform as well as
 # loading direct file requests and directing the request down the tree of subpages
 
-# there's definitely a standard lib for this
-# get that .. don't expand this function
+# wrapper function: guesses the file's mimetype based on its file extension
+# fileExtension (str) - the part after the last . in a filename
+# RETURNS: (mimetype, encoding) 
 def _getMimeType(fileExtension):
-	result = "text/plain"
-
-	if(fileExtension == "css"):
-		result = "content-type", "text/css"
-	elif(fileExtension == "js"):
-		result = "content-type", "text/javascript"
-	elif(fileExtension == "gif"):
-		result = "content-type", "image/gif"
-
-	return result
+	return mimetypes.guess_type(fileExtension)
 
 # url (str) - the base url from the request
 #             NOTE: url has a leading "/"
@@ -42,7 +35,7 @@ def _getMimeType(fileExtension):
 def readUrl(url, query, data):
 	# default response contents
 	status = HTTPStatus.BAD_REQUEST
-	header = [["content-type", "text/plain"]]
+	header = [("content-type", "text/plain")]
 	body = b'400 - Bad Request'
 
 	# remove trailing / whlie leaving leading slash
@@ -59,27 +52,27 @@ def readUrl(url, query, data):
 	# http request
 	if(urlLength > 1):
 		# check if attempting to load a file directly
-		fileSplit = urlSplit[urlLast].split('.') # [name, extension]
 
+		lastArg = urlSplit[urlLast]
 		# if has file extension
-		if(len(fileSplit) > 1):
+		if "." in lastArg:
 			# check if requesting favicon
-			if(fileSplit[0] == "favicon"):
+			if(lastArg == "favicon.ico"):
 				status = HTTPStatus.OK
-				header = [["content-type", "image/gif"]]
+				header = [("content-type", "image/gif")]
 				body = accessFile.readFile(directory.www + "/favicon.gif", directory.www)
 				if(body == b''):
 					status = HTTPStatus.NOT_FOUND
 			# get the file by adding the url to the www directory
 			else:
-				mimeType = _getMimeType(fileSplit[1])
+				mimeType = _getMimeType(lastArg)
 				filepath = directory.www + url
 				status = HTTPStatus.OK
-				header = [[mimeType[0], mimeType[1]]]
+				header = [("content-type", mimeType[0]), ("content-encoding", mimeType[1])]
 				body = accessFile.readFile(filepath, directory.www)
 				if(body == b''):
 					status = HTTPStatus.NOT_FOUND
-					header = [["content-type", "text/html"]]
+					header = [("content-type", "text/html")]
 					body = accessFile.readFile(directory.www + "/404.html", directory.www)
 
 		# if not loading a file the loading a page
@@ -97,15 +90,15 @@ def readUrl(url, query, data):
 		print("Internal Error:", url)
 		if(url == "405"):
 			status = HTTPStatus.METHOD_NOT_ALLOWED
-			header = [["content-type", "text/html"]]
+			header = [("content-type", "text/html")]
 			body = accessFile.readFile(directory.www + "/405.html", directory.www)
 		elif(url == "415"):
 			status = HTTPStatus.UNSUPPORTED_MEDIA_TYPE
-			header = [["content-type", "text/html"]]
+			header = [("content-type", "text/html")]
 			body = b'MEDIA TYPE NOT SUPPORTED'
 		else:
 			status = HTTPStatus.INTERNAL_SERVER_ERROR
-			header = [["content-type", "text/plain"]]
+			header = [("content-type", "text/plain")]
 			body = b'500 - Internal Server Error'
 		# if this point is reached the response is the default
 		# response created at the top of this function
