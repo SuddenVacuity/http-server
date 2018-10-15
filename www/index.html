@@ -23,14 +23,6 @@ in the server source files base directory.
 		<br><a href="media/video/video.mp4">Video</a>
 	</p>
 	<br>
-	<br>
-	<p>
-		Test Upload Image
-	</p>
-	<form id="uploadForm" enctype="multipart/form-data", method="post", action="/file">
-		<input id="uploadinput" name="uploadFile" type="file" accept="image/jpeg"/>
-		<input type="submit" value="submit" id="submitFile"/>
-	</form>
 </div>
 
 <div>
@@ -57,10 +49,43 @@ in the server source files base directory.
  		<br>
  		<input type="text" id="entryData" name="postEntry" placeholder="Entry Value" value="" />
 	</form>
-	<button id="btn1" onclick="sendEntryText('/post')">Send Data</button>
+	<button id="btn1" onclick="sendEntryText('/post?json')">Send Data</button>
 	<button id="btn2" onclick="getEntryText('/get')">Load Data</button>
 </div>
 
 	<p id="entry">---</p>
+	<br>
+	<br>
+	<p>
+		Test Upload jpeg Image File
+	</p>
+	<form id="uploadForm" enctype="multipart/form-data", method="post", action="/post?image">
+		<input id="uploadImage" name="value" type="file" accept="image/jpeg"/>
+		<input type="submit" value="submit" id="submitFile"/>
+	</form>
+	<br>
+	<p>
+		Test Upload Text File
+	</p>
+	<form id="uploadForm" enctype="multipart/form-data", method="post", action="/post?text">
+		<input id="uploadText" name="value" type="file" accept="text/plain"/>
+		<input type="submit" value="submit" id="submitFile"/>
+	</form>
+	<br>
+	<p>
+		Test Upload mp3 Audio File
+	</p>
+	<form id="uploadForm" enctype="multipart/form-data", method="post", action="/post?audio">
+		<input id="uploadAudio" name="value" type="file" accept="audio/mpeg"/>
+		<input type="submit" value="submit" id="submitFile"/>
+	</form>
+	<br>
+	<p>
+		Test Upload mp4 Video File
+	</p>
+	<form id="uploadForm" enctype="multipart/form-data", method="post", action="/post?video">
+		<input id="uploadVideo" name="value" type="file" accept="video/mp4"/>
+		<input type="submit" value="submit" id="submitFile"/>
+	</form>
 </body>
 </html>

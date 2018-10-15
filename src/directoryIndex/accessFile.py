@@ -34,9 +34,10 @@ def readFile(filepath, basepath):
 		print("ERROR: accessFile.py >> readFile(): File Does Not Exist.")
 		print("Error File:", filepath)
 		data = b''
-	except:
+	except Exception as e:
 		print("ERROR: accessFile.py >> readFile(): Unable to Read File.")
 		print("Error File:", filepath)
+		print(e)
 		data = b''
 
 	return data
@@ -52,12 +53,14 @@ def writeFile(filepath, data, basepath):
 		return False
 
 	print("Write File:", filepath)
+
 	try:
 		with open(filepath, 'wb') as f:
 			f.write(data)
-	except:
+	except Exception as e:
 		print("ERROR: accessFile.py >> writeFile(): Unable to Write to File")
 		print("Error File:", filepath)
+		print(e)
 		return False
 
 	return True

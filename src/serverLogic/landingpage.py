@@ -35,7 +35,7 @@ class Landingpage(webpage.Webpage):
 		# this page's functions
 		# this is a GET request
 		elif(urlSplit[0] == "get"):
-			filepath = directory.database + "/" + query + ".txt"
+			filepath = directory.databaseJson + "/" + query + ".txt"
 			status = HTTPStatus.OK
 			mimeType = mimetypes.guess_type(filepath)
 			header = [("content-type", mimeType[0]), ("content-encoding", mimeType[1])]
@@ -46,23 +46,38 @@ class Landingpage(webpage.Webpage):
 				header = [("content-type", "text/plain")]
 				body = b'Entry Does Not Exist'
 		# this is a POST request
-		elif(urlSplit[0] == "file"):
-			if(data == None):
-				return
-			filepath = directory.database + "/" + "test" + ".jpeg"
-			# attempt to create the file
-			if(accessFile.writeFile(filepath, data["uploadFile"][0], directory.database) == True):
-				status = HTTPStatus.NO_CONTENT
-				header = [("content-type", "text/plain")]
-				body = b''
-			else:
-				status = HTTPStatus.CONFLICT
-				header = [("content-type", "text/plain")]
-				body = b'Unable to process request'
+		# there needs to be server side data type validations
 		elif(urlSplit[0] == "post"):
-			filepath = directory.database + "/" + data['id'] + ".txt"
+			baseDir = None
+			if(query == "image"):
+				baseDir = directory.databaseImages
+				filepath = baseDir + "/" + "test" + ".jpeg"
+				writeData = data["value"][0]
+			elif(query == "text"):
+				baseDir = directory.databaseText
+				filepath = baseDir + "/" + "test" + ".txt"
+				writeData = data["value"][0]
+			elif(query == "audio"):
+				baseDir = directory.databaseAudio
+				filepath = baseDir + "/" + "test" + ".mp3"
+				writeData = data["value"][0]
+			elif(query == "video"):
+				baseDir = directory.databaseVideo
+				filepath = baseDir + "/" + "test" + ".mp4"
+				writeData = data["value"][0]
+			elif(query == "json"):
+				baseDir = directory.databaseJson
+				filepath = baseDir + "/" + data['id'] + ".txt"
+				writeData = data["value"].encode()
+			else:
+				status = HTTPStatus.BAD_REQUEST
+				header = [("content-type", "text/plain")]
+				body = b'400 - Bad Request'
+
+				return Response(status, header, body)
+
 			# attempt to create the file
-			if(accessFile.writeFile(filepath, data["value"].encode(), directory.database) == True):
+			if(accessFile.writeFile(filepath, writeData, baseDir) == True):
 				status = HTTPStatus.CREATED
 				header = [("content-type", "text/plain")]
 				body = b'Successfully Created Entry'

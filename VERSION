@@ -8,6 +8,13 @@ Versioning Rules:
               major.minor.commit
 ===============================================
 
+v0.6.2 - Uploads and Filepaths
+add: support more upload types
+add: ensure all directories to be used exist
+add: build non-existing paths for multiplatform
+change: make directory building more modular
+change: print file access exceptions when thrown
+
 v0.6.1 - Change Versioning System
 I've found that all of my "feature" additions are being recorded as "stable" commits.
 This caused the counter for recording feature changes to not reflect progress made.
