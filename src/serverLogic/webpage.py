@@ -33,7 +33,6 @@ class Webpage():
 	# do not override
 	# this function should only be called internally
 	def _loadIndex(self, urlSplit):
-
 		if(urlSplit[0] == self.pageName):
 			filepath = directory.www + self.pagePath + "index.html"
 			status = HTTPStatus.OK

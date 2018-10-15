@@ -29,21 +29,24 @@ def buildCookie():
 	c = [("Set-Cookie", "myData=1234#myData2=5555; Path=/; Max-Age=30")]
 	#self.response.header = [self.response.header, c]
 
-def do_GET(requestUrl):
+def do_GET(requestUrl, requestHeaders):
 	request = Request(requestUrl)
-	response = processUrl.readUrl(request.path, request.query, None)
+	parsedHeaders = requestHeaders.as_string()
+	response = processUrl.readUrl(parsedHeaders, request.path, request.query, None)
 	return checkStatus.getResponse(response.status, response.header, response.body)
 
-def do_HEAD(requestUrl):
+def do_HEAD(requestUrl, requestHeaders):
 	request = Request(requestUrl)
-	response = processUrl.readUrl(request.path, request.query, None)
+	parsedHeaders = requestHeaders.as_string()
+	response = processUrl.readUrl(parsedHeaders, request.path, request.query, None)
 	return checkStatus.getResponse(response.status, response.header, response.body)
 
 # path - url path
 # data - dictionary containing key/value pairs of data sent
-def do_POST(requestUrl, data):
+def do_POST(requestUrl, requestHeaders, data):
 	request = Request(requestUrl)
-	response = processUrl.readUrl(request.path, request.query, data)
+	parsedHeaders = requestHeaders.as_string()
+	response = processUrl.readUrl(parsedHeaders, request.path, request.query, data)
 	return checkStatus.getResponse(response.status, response.header, response.body)
 
 def do_PUT():

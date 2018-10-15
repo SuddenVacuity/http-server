@@ -21,6 +21,51 @@ from serverLogic import pageIndex
 def _getMimeType(fileExtension):
 	return mimetypes.guess_type(fileExtension)
 
+def _extractToDictionary(headers, query):
+	params = {}
+	params["query"] = {}
+	queryArgs = query.split("&")
+	for arg in queryArgs:
+		keypair = arg.split("=")
+		if(len(keypair) == 2):
+			params["query"][keypair[0]] = keypair[1]
+
+	# split apart the headers
+	headers = headers.split("\n")
+
+	# get the cookies from the headers
+	params["cookies"] = {}
+	for entry in headers:
+		# first find the cookies in the headers
+		if entry.startswith("Cookie"):
+			cookie = {}
+			# example "cookie": "login=username=admin&password=password123"
+			cookieSplit = entry.split("=", maxsplit=1)
+
+			values = cookieSplit[1].split("&")
+
+			for val in values:
+				keypair = val.split("=")
+				if len(keypair) == 2:
+					cookie[keypair[0]] = keypair[1]
+
+			# add the cookie to the params dictionary
+			params["cookies"][cookieSplit[0]] = cookie
+			# blank the value so it doens't get searched again
+			entry = ''
+
+	print("COOKIES:", params["cookies"])
+
+	params["headers"] = {}
+	for entry in headers:
+		hdv = entry.split(":")
+
+		if len(hdv) == 2:
+			hdv[1] = hdv[1].strip(" ")
+			params["headers"][hdv[0]] = hdv[1]
+
+	return params
+
 # url (str) - the base url from the request
 #             NOTE: url has a leading "/"
 #             NOTE: any url ending with '/' calls index.html
@@ -32,7 +77,7 @@ def _getMimeType(fileExtension):
 #               will be NoneType on GET/HEAD requests
 #               NOTE: for file operations data does NOT have a leading or trailing "/"
 # returns http [header, body]
-def readUrl(url, query, data):
+def readUrl(headers, url, query, data):
 	# default response contents
 	status = HTTPStatus.BAD_REQUEST
 	header = [("content-type", "text/plain")]
@@ -50,12 +95,7 @@ def readUrl(url, query, data):
 	urlLast = urlLength - 1
 
 	# add all query arguments to a dictionary
-	params = {}
-	queryArgs = query.split("&")
-	for arg in queryArgs:
-		keypair = arg.split("=")
-		if(len(keypair) == 2):
-			params[keypair[0]] = keypair[1]
+	params = _extractToDictionary(headers, query)
 
 	# http request
 	if(urlLength > 1):

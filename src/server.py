@@ -76,18 +76,18 @@ class server(http.server.BaseHTTPRequestHandler):
 	def do_GET(self):
 		url = urllib.parse.unquote(self.path)
 		parsedUrl = urllib.parse.urlparse(url)
-		response = processRequest.do_GET(parsedUrl)
+		response = processRequest.do_GET(parsedUrl, self.headers)
 		self.respond(response.status, response.body, response.header)
 	def do_HEAD(self):
 		url = urllib.parse.unquote(self.path)
 		parsedUrl = urllib.parse.urlparse(url)
-		response = processRequest.do_HEAD(parsedUrl)
+		response = processRequest.do_HEAD(parsedUrl, self.headers)
 		self.respond(response.status, b'', response.header)
 	def do_POST(self):
 		postvars = self._readBodyData()
 		url = urllib.parse.unquote(self.path)
 		parsedUrl = urllib.parse.urlparse(url)
-		response = processRequest.do_POST(parsedUrl, postvars)
+		response = processRequest.do_POST(parsedUrl, self.headers, postvars)
 		self.respond(response.status, response.body, response.header)
 	def do_PUT(self):
 		response = processRequest.do_PUT()

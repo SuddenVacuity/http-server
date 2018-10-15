@@ -8,6 +8,11 @@ Versioning Rules:
               major.minor.commit
 ===============================================
 
+v0.7.0 - Cookie Support
+add: header and cookie values to request query for internal use
+add: inline documentation on changes made to request query
+change: pass the http request headers into processUrl.py
+
 v0.6.3 - Multiple Upload Parameters
 add: ability to process multiple query arguments from urls
 add: data dump for thread-related exception in server.py

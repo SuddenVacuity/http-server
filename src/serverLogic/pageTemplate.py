@@ -45,7 +45,18 @@ class PageTemplate(webpage.Webpage):
  	# G          The subpage receives urlSplit as ["read"]
  	#              Then the subpage check if "read" is one of its actions
  	#              "read" would be a GET request for data so there should be a query value to determine what to read
-	# query (str) - The query arguments extracted from a url
+	# query ({{"key":"value"}, ...}) - The query arguments extracted from a requests header and requested url
+	#           NOTE: This is a dictionary containing three sub dictionaries
+	#                 ["query"] (dict) - request query parameters extracted from the url
+	#                 ["cookies"] (dict) - cookies extracted from the headers
+	#                                      To create a cookie add "Set-Cookie" along with a cookie name followed 
+	#                                      by key/value pairs to a responses header.
+	#                                         ex. "Set-Cookie": "myCookie=key=value"
+	#                                      Multi-value cookies are also supported with each value seperated by &
+	#                                         ex. "Set-Cookie": "myCookie=key1=value1&key2=value2"
+	#                                      To access a cookies' key's value read query["cookies"]["myCookie"]["key"]
+	#                                      NOTE: cookie structure is "cookiename": {"key": "value", ...}
+	#                 ["headers"] (dict) - non-cookie http header attributes from the headers
 	# data (bytes) - data from the body of an http request
 	def performAction(self, urlSplit, query, data):
 		return None
