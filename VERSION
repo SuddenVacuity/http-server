@@ -1,8 +1,22 @@
+Versioning Rules:
+  Major: Only set when the project reaches the state it was meant to be from the start.
+  Minor: This changes whenever significant feature changes have been made.
+  Commit: This increases anytime a commit has been made.
 
 ===============================================
                VERSION HISTORY
-          major.minor.stable.unstable
+              major.minor.commit
 ===============================================
+
+v0.6.1 - Change Versioning System
+I've found that all of my "feature" additions are being recorded as "stable" commits.
+This caused the counter for recording feature changes to not reflect progress made.
+Because of this there will only be three numbers in the version.
+The current version has been updated to reflect the progress that has been made.
+
+The first being major release; Only set when the project reaches the state it was meant to be from the start,
+the second being minor release; This changes whenever significant feature changes have been made,
+and the last being commit; This increases anytime a commit has been made.
 
 v0.1.0.1 - Mime Types and Upload
 add: proper mime type handling
