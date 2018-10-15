@@ -49,6 +49,14 @@ def readUrl(url, query, data):
 	urlLength = len(urlSplit)
 	urlLast = urlLength - 1
 
+	# add all query arguments to a dictionary
+	params = {}
+	queryArgs = query.split("&")
+	for arg in queryArgs:
+		keypair = arg.split("=")
+		if(len(keypair) == 2):
+			params[keypair[0]] = keypair[1]
+
 	# http request
 	if(urlLength > 1):
 		# check if attempting to load a file directly
@@ -78,7 +86,7 @@ def readUrl(url, query, data):
 		# if not loading a file the loading a page
 		# NOTE: remove first element because "/page" splits to ['', 'page']
 		else:
-			response = pageIndex.process(urlSplit, query, data)
+			response = pageIndex.process(urlSplit, params, data)
 			if(response != None):
 				status = response.status
 				header = response.header

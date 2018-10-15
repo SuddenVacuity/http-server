@@ -49,8 +49,8 @@ in the server source files base directory.
  		<br>
  		<input type="text" id="entryData" name="postEntry" placeholder="Entry Value" value="" />
 	</form>
-	<button id="btn1" onclick="sendEntryText('/post?json')">Send Data</button>
-	<button id="btn2" onclick="getEntryText('/get')">Load Data</button>
+	<button id="btn1" onclick="sendEntryText()">Send Data</button>
+	<button id="btn2" onclick="getEntryText()">Load Data</button>
 </div>
 
 	<p id="entry">---</p>
@@ -59,7 +59,7 @@ in the server source files base directory.
 	<p>
 		Test Upload jpeg Image File
 	</p>
-	<form id="uploadForm" enctype="multipart/form-data", method="post", action="/post?image">
+	<form id="uploadForm" enctype="multipart/form-data", method="post", action="/post?type=image">
 		<input id="uploadImage" name="value" type="file" accept="image/jpeg"/>
 		<input type="submit" value="submit" id="submitFile"/>
 	</form>
@@ -67,7 +67,7 @@ in the server source files base directory.
 	<p>
 		Test Upload Text File
 	</p>
-	<form id="uploadForm" enctype="multipart/form-data", method="post", action="/post?text">
+	<form id="uploadForm" enctype="multipart/form-data", method="post", action="/post?type=text">
 		<input id="uploadText" name="value" type="file" accept="text/plain"/>
 		<input type="submit" value="submit" id="submitFile"/>
 	</form>
@@ -75,7 +75,7 @@ in the server source files base directory.
 	<p>
 		Test Upload mp3 Audio File
 	</p>
-	<form id="uploadForm" enctype="multipart/form-data", method="post", action="/post?audio">
+	<form id="uploadForm" enctype="multipart/form-data", method="post", action="/post?type=audio">
 		<input id="uploadAudio" name="value" type="file" accept="audio/mpeg"/>
 		<input type="submit" value="submit" id="submitFile"/>
 	</form>
@@ -83,7 +83,7 @@ in the server source files base directory.
 	<p>
 		Test Upload mp4 Video File
 	</p>
-	<form id="uploadForm" enctype="multipart/form-data", method="post", action="/post?video">
+	<form id="uploadForm" enctype="multipart/form-data", method="post", action="/post?type=video">
 		<input id="uploadVideo" name="value" type="file" accept="video/mp4"/>
 		<input type="submit" value="submit" id="submitFile"/>
 	</form>

@@ -60,7 +60,17 @@ class server(http.server.BaseHTTPRequestHandler):
 	#		the data in these tuple(s) must be standard name/value pairs for a http header
 	def respond(self, status, data, attributes):
 		self._set_headers(status, attributes)
-		self.wfile.write(data)
+		# there's been an uncommon BrokenPipeError occuring here
+		# I've added a data dump to try and find out the cause
+		try:
+			self.wfile.write(data)
+		except BrokenPipeError as e:
+			print("==========================================")
+			print("Data Dump: server.py >> respond()")
+			print("Status:", status)
+			print("Headers:", attributes)
+			print("Body:", data)
+			print(e)
 
 	# override the base handler's request handlers
 	def do_GET(self):

@@ -7,7 +7,7 @@ function randomNumber() {
 	document.getElementById("number").innerHTML = Math.floor(Math.random() * 1000000);
 }
 
-function getEntryText(url) {
+function getEntryText() {
 	myId = document.getElementById("entryId").value;
 	entryText = document.getElementById("entry");
 	entryText.innerHTML = "---"
@@ -18,7 +18,7 @@ function getEntryText(url) {
 	}
 
 	// add parameters to the url
-	urlp = url + "?" + myId;
+	urlp = "/get" + "?" + "type=json" + "&name=" + myId;
 
 	fetch(urlp).then(function(response) {
 		if(response.ok) {
@@ -32,7 +32,7 @@ function getEntryText(url) {
 	});
 }
 
-function sendEntryText(url) {
+function sendEntryText() {
 	myId = document.getElementById("entryId").value;
 	myValue = document.getElementById("entryData").value;
 	entryText = document.getElementById("entry");
@@ -43,7 +43,9 @@ function sendEntryText(url) {
 		return
 	}
 
-	fetch(url, {
+	urlp = "/post" + "?" + "type=json"
+
+	fetch(urlp, {
 		method: "POST",
 		headers: {
 			'Accept': 'application/json',

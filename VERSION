@@ -8,6 +8,11 @@ Versioning Rules:
               major.minor.commit
 ===============================================
 
+v0.6.3 - Multiple Upload Parameters
+add: ability to process multiple query arguments from urls
+add: data dump for thread-related exception in server.py
+fix: uncommented a couple lines that were left commented
+
 v0.6.2 - Uploads and Filepaths
 add: support more upload types
 add: ensure all directories to be used exist

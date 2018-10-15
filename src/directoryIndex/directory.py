@@ -49,13 +49,13 @@ databaseJson   = database + _SLASH + _subJson
 def setBaseDirectory(path):
 	global base
 	base = path
-	#makeDir(base)
+	makeDir(base)
 
 	global www
 	global database
 	www = base +_SLASH +  _www
 	database = base +_SLASH +  _db
-	#makeDir(www)
+	makeDir(www)
 	makeDir(database)
 
 	global databaseImages

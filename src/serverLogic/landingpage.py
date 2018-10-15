@@ -22,12 +22,12 @@ from serverLogic import pageIndex
 # to call this classes functions during processing use the funciton process()
 
 class Landingpage(webpage.Webpage):
-	def performAction(self, urlSplit, query, data):
+	def performAction(self, urlSplit, params, data):
 		response = None
 
 		# check if calling subpage
 		if(urlSplit[0] == "subpage"):
-			response = pageIndex.pages["subpage"].process(urlSplit, query, data)
+			response = pageIndex.pages["subpage"].process(urlSplit, params, data)
 			status = response.status
 			header = response.header
 			body = response.body
@@ -35,7 +35,7 @@ class Landingpage(webpage.Webpage):
 		# this page's functions
 		# this is a GET request
 		elif(urlSplit[0] == "get"):
-			filepath = directory.databaseJson + "/" + query + ".txt"
+			filepath = directory.databaseJson + "/" + params["name"] + ".txt"
 			status = HTTPStatus.OK
 			mimeType = mimetypes.guess_type(filepath)
 			header = [("content-type", mimeType[0]), ("content-encoding", mimeType[1])]
@@ -49,23 +49,23 @@ class Landingpage(webpage.Webpage):
 		# there needs to be server side data type validations
 		elif(urlSplit[0] == "post"):
 			baseDir = None
-			if(query == "image"):
+			if(params['type'] == "image"):
 				baseDir = directory.databaseImages
 				filepath = baseDir + "/" + "test" + ".jpeg"
 				writeData = data["value"][0]
-			elif(query == "text"):
+			elif(params['type'] == "text"):
 				baseDir = directory.databaseText
 				filepath = baseDir + "/" + "test" + ".txt"
 				writeData = data["value"][0]
-			elif(query == "audio"):
+			elif(params['type'] == "audio"):
 				baseDir = directory.databaseAudio
 				filepath = baseDir + "/" + "test" + ".mp3"
 				writeData = data["value"][0]
-			elif(query == "video"):
+			elif(params['type'] == "video"):
 				baseDir = directory.databaseVideo
 				filepath = baseDir + "/" + "test" + ".mp4"
 				writeData = data["value"][0]
-			elif(query == "json"):
+			elif(params['type'] == "json"):
 				baseDir = directory.databaseJson
 				filepath = baseDir + "/" + data['id'] + ".txt"
 				writeData = data["value"].encode()
