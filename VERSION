@@ -8,6 +8,12 @@ Versioning Rules:
               major.minor.commit
 ===============================================
 
+v0.7.1 - Documentation
+add: inline documentation
+fix: strip http header attribute name from cookie names
+change: update README.md
+change: variable name query to params in relevant files
+
 v0.7.0 - Cookie Support
 add: header and cookie values to request query for internal use
 add: inline documentation on changes made to request query

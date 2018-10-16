@@ -54,14 +54,14 @@ class Webpage():
 
 	# do not override
 	# this function is called externally when the url is being processed
-	def process(self, urlSplit, query, data):
+	def process(self, urlSplit, params, data):
 		if(len(urlSplit) != 1):
 			urlSplit = urlSplit[1:]
 
 		response = self._loadIndex(urlSplit)
 
 		if(response == None):
-			response = self.performAction(urlSplit, query, data)
+			response = self.performAction(urlSplit, params, data)
 		if(response == None):
 			response = self._notFound()
 		if(response == None):
@@ -74,5 +74,5 @@ class Webpage():
 	# this function should only be called by called by process()
 	# RETURNS: (Response) http response data
 	#                     returns None when no action taken
-	def performAction(self, urlSplit, query, data):
+	def performAction(self, urlSplit, params, data):
 		return None

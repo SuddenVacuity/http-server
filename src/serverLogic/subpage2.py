@@ -21,6 +21,6 @@ from serverLogic import pageIndex
 # to call this classes functions during processing use the funciton process()
 
 class Subpage2(webpage.Webpage):
-	def performAction(self, urlSplit, query, data):
-		print("{} >> urlsplit: {}, query: {},  data:{}".format(self.pageName, urlSplit, query, data))
+	def performAction(self, urlSplit, params, data):
+		print("{} >> urlsplit: {}, params: {},  data:{}".format(self.pageName, urlSplit, params, data))
 		return None

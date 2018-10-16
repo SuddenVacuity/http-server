@@ -21,13 +21,18 @@ from serverLogic import pageIndex
 def _getMimeType(fileExtension):
 	return mimetypes.guess_type(fileExtension)
 
+# sorts url queries, cookies and non-cookie header attributes into a dictionary
+# RETURNS: (dict)
 def _extractToDictionary(headers, query):
 	params = {}
+	# example query is "myData1=123&myData2=456"
 	params["query"] = {}
+	# ["myData1=123", "myData2=456"]
 	queryArgs = query.split("&")
 	for arg in queryArgs:
 		keypair = arg.split("=")
 		if(len(keypair) == 2):
+			# params["query"]["myData"] = 123
 			params["query"][keypair[0]] = keypair[1]
 
 	# split apart the headers
@@ -37,31 +42,43 @@ def _extractToDictionary(headers, query):
 	params["cookies"] = {}
 	for entry in headers:
 		# first find the cookies in the headers
+		# example: "Cookie: login=username=admin&password=password123"
 		if entry.startswith("Cookie"):
+			# "login=username=admin&password=password123"
+			entry = entry.lstrip("Cookie:")
+			entry = entry.strip(" ")
 			cookie = {}
-			# example "cookie": "login=username=admin&password=password123"
+
+			# ["login", "login=username=admin&password=password123"]
 			cookieSplit = entry.split("=", maxsplit=1)
 
+			# ["username=admin", "password=password123"]
 			values = cookieSplit[1].split("&")
 
 			for val in values:
 				keypair = val.split("=")
 				if len(keypair) == 2:
+					# cookie["username"] = "admin"
 					cookie[keypair[0]] = keypair[1]
 
 			# add the cookie to the params dictionary
+			# params["cookies"]["login"] = cookie
 			params["cookies"][cookieSplit[0]] = cookie
+			
 			# blank the value so it doens't get searched again
 			entry = ''
 
 	print("COOKIES:", params["cookies"])
 
 	params["headers"] = {}
+	# "Host: 127.0.0.1"
 	for entry in headers:
+		# ["Host", " 127.0.0.1"]
 		hdv = entry.split(":")
 
 		if len(hdv) == 2:
 			hdv[1] = hdv[1].strip(" ")
+			# params["headers"]["Host"] = "127.0.0.1"
 			params["headers"][hdv[0]] = hdv[1]
 
 	return params

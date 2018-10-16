@@ -58,5 +58,5 @@ class PageTemplate(webpage.Webpage):
 	#                                      NOTE: cookie structure is "cookiename": {"key": "value", ...}
 	#                 ["headers"] (dict) - non-cookie http header attributes from the headers
 	# data (bytes) - data from the body of an http request
-	def performAction(self, urlSplit, query, data):
+	def performAction(self, urlSplit, params, data):
 		return None

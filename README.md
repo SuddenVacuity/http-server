@@ -48,7 +48,30 @@ Creating config.json:
            "port": 80
     }
 
-Creating Wepages With Custom Logic:
+Front-End Instructions
+-Create html/script/style files in the www folder to be called from a client browser.
+    The only request methods supported are GET, POST and HEAD with HEAD being un-optimized
+-GET requests
+    To request a file in the www folder simply request it by it's path and filename.
+      ex. "/subpage/style.css"
+      ex. "/images/banner.jpeg"
+    To request data that requires the server to read from the private database, check its state
+    or authenticate the user request use the appropriate server action call.
+-Server Actions
+    To request the server to peform an action send the appropriate url and query argument(s).
+    Query arguments are always key/value pairs
+      ex. /post?filetype=image
+      ex. /get?filetype=image&name=my_image
+-POST requests
+    Currently the only request body content-types supported are 'multipart/form-data' and 'application/json'
+    The content-type of the data sent must either be inferred within the backend or specified through query arguments
+     Inferred in the backend
+       ex. /post
+     Specified in the url
+       ex. /post?filetype=image
+
+Back-End Instructions
+-Creating Wepages With Custom Logic:
     Create an index.html for the page at an appropiate location within the www folder
     Copy the file /src/serverLogic/pageTemplate.py and rename the copy.
     Open the renamed file and rename the class PageTemplate(..)
@@ -58,7 +81,21 @@ Creating Wepages With Custom Logic:
         www/index.html                    >> YourWebpage("/", "") 
         www/targetpage/index.html         >> YourWebpage("/", "targetpage") 
         www/subpage/targetpage/index.html >> YourWebpage("/subpage/", "targetpage")
+        NOTE: when naming the webpage class the path name must begin and end with a /
     Call the page where needed through pageIndex.pages[key].process(..)
+-Url Parameters
+    Url parameters are extracted from the url and added to a dictionary.
+    These parameters can be accessed within the weblogic files
+      ex. "/post?filetype=image" >> "filetype" is called with: params["query"]["filetype"]
+-Cookies
+    Add cookies the the response header with the "Set-Cookie" attribute in the http response header.
+      ex. "Set-Cookie": "value=myData=123; Path=/"
+      ex. "Set-Cookie": "value=myData1=123&mydata2=456; Path=/"
+    Cookies received through an http request are added to a dictionary.
+      The values from the previous examples can be accessed in weblogic files using: params["cookies"]["value"]["myData"]
+-Non-Cookie Headers
+    All non-cookie header values are stored in a dictionary.
+      ex. to access the "Host" attribute use: params["headers"]["Host"]
 
 Using the Command Interface:
     There are 3 sections the the windowed interface. The status bar, the output display and the command entry.
