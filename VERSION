@@ -8,6 +8,9 @@ Versioning Rules:
               major.minor.commit
 ===============================================
 
+v0.8.0 - Restructure Custom Page Logic
+change: move custom pages to their own module
+
 v0.7.1 - Documentation
 add: inline documentation
 fix: strip http header attribute name from cookie names

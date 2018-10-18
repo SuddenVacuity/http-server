@@ -2,9 +2,8 @@
 This file is subject to the terms and conditions found 
 in the file "LICENSE" located in the project base directory.
 '''
-from serverLogic import landingpage
-from serverLogic import subpage
-from serverLogic import subpage2
+
+from pages import *
 
 # dictionary containing registered pages
 # USE: create a registered page uby adding an oject that inherits the wepbage class
