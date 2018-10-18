@@ -1,0 +1,47 @@
+
+[ ] - Not Started
+[.] - Incomplete
+[x] - Complete
+
+Server
+   [x] Add option to configure host/port
+   [x] Listen for http requests
+Serve Static Webpages
+   [x] Create responses web browsers can understand
+   [x] Serve publicly available files that are requested directly
+Serve Dynamic Webpages
+   [x] Accept and handle action requests in the url
+   [x] Accept and handle url query arguments
+   [.] Accept uploading of data from the client
+   [x] Support cookies
+   [ ] Pre-load often-used resources to memory on start
+Http Request Methods
+   [x] GET requests
+   [x] POST requests
+   [.] HEAD requests
+   [ ] PUT requests
+   [ ] DELETE requests
+   [ ] CONNECT requests
+   [ ] OPTIONS request
+   [ ] TRACE requests
+   [ ] PATCH requests
+User Authentication
+   [ ] User registration
+   [ ] Session cookies
+Data Storage
+   [x] Store data in a protected location
+   [ ] Encrypt/hash sensitive data
+   [ ] Resource Index
+Operator Interaction
+   Interface
+      [.] Windowed interface
+      [x] Command input
+      [.] Feedback to operator
+   Commands
+      [x] Quit
+      [.] Adjust configuration
+      [ ] User session commands
+Mectrics
+   [ ] Server load
+   [ ] Server performance within modules/functions
+   [ ] Frequency at which features are used
