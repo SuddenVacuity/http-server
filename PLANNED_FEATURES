@@ -19,12 +19,20 @@ Http Request Methods
    [x] GET requests
    [x] POST requests
    [.] HEAD requests
-   [ ] PUT requests
-   [ ] DELETE requests
    [ ] CONNECT requests
-   [ ] OPTIONS request
    [ ] TRACE requests
+   [ ] PUT requests
+           note: PUT requests will most likely need to be limited whitelisted ip addresses
+                 or require authentication.
+   [ ] DELETE requests
+           note: DELETE requests will most likely need to be limited whitelisted ip addresses
+                 or require authentication.
+   [ ] OPTIONS request
+           note: OPTIONS requests will most likely need to be limited whitelisted ip addresses
+                 or require authentication.
    [ ] PATCH requests
+           note: PATCH requests will most likely need to be limited whitelisted ip addresses
+                 or require authentication.
 User Authentication
    [ ] User registration
    [ ] Session cookies
@@ -41,7 +49,7 @@ Operator Interaction
       [x] Quit
       [.] Adjust configuration
       [ ] User session commands
-Mectrics
+Metrics
    [ ] Server load
    [ ] Server performance within modules/functions
    [ ] Frequency at which features are used

@@ -71,30 +71,30 @@ Front-End Instructions
        ex. /post?filetype=image
 
 Back-End Instructions
--Creating Wepages With Custom Logic:
+-Creating Custom Logic for Webpages:
     Create an index.html for the page at an appropiate location within the www folder
-    Copy the file /src/serverLogic/pageTemplate.py and rename the copy.
+    Copy the file /src/pages/pageTemplate.py and rename the copy.
     Open the renamed file and rename the class PageTemplate(..)
     Add custom logic to the overridden performAction function.
     Import the copied file into pageIndex.py
-    Register the new page in pageIndex.py by creating an instance in the pages dictionary
+    Register the new page logic in pageIndex.py by creating an instance in the pages dictionary
         www/index.html                    >> YourWebpage("/", "") 
         www/targetpage/index.html         >> YourWebpage("/", "targetpage") 
         www/subpage/targetpage/index.html >> YourWebpage("/subpage/", "targetpage")
-        NOTE: when naming the webpage class the path name must begin and end with a /
+        NOTE: when creating the webpage instance the pathname must begin and end with a /
     Call the page where needed through pageIndex.pages[key].process(..)
 -Url Parameters
-    Url parameters are extracted from the url and added to a dictionary.
+    Url parameters are extracted from the url and added to a dictionary (params).
     These parameters can be accessed within the weblogic files
       ex. "/post?filetype=image" >> "filetype" is called with: params["query"]["filetype"]
 -Cookies
     Add cookies the the response header with the "Set-Cookie" attribute in the http response header.
       ex. "Set-Cookie": "value=myData=123; Path=/"
       ex. "Set-Cookie": "value=myData1=123&mydata2=456; Path=/"
-    Cookies received through an http request are added to a dictionary.
+    Cookies received through an http request are added to a dictionary (params).
       The values from the previous examples can be accessed in weblogic files using: params["cookies"]["value"]["myData"]
 -Non-Cookie Headers
-    All non-cookie header values are stored in a dictionary.
+    All non-cookie header values are stored in a dictionary (params).
       ex. to access the "Host" attribute use: params["headers"]["Host"]
 
 Using the Command Interface:

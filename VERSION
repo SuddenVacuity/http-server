@@ -8,6 +8,14 @@ Versioning Rules:
               major.minor.commit
 ===============================================
 
+v0.8.1 - Webpage Auto-Detections, Documentation and Minor Fixes
+add: auto-detection and registration of index.html files in the www folder
+add: inline documentation
+change: allow modules for custom page logic to be ignored by import *
+change: update README.md
+change: update variable names to match context change
+remove: page logic for previous registration system
+
 v0.8.0 - Restructure Custom Page Logic
 change: move custom pages to their own module
 

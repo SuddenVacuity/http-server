@@ -12,6 +12,7 @@ import config
 import threading
 
 from window import frames
+from serverLogic import pageIndex
 from directoryIndex import directory
 
 # initialization function to be run on a seperate thread
@@ -49,6 +50,9 @@ def init():
 	directory.setBaseDirectory(config.getKeyValue("baseDirectory"))
 	HOST = config.getKeyValue("ip4host")
 	PORT = config.getKeyValue("port")
+
+	# search for unregistered index.html files
+	pageIndex.findIndexes()
 
 	# run server
 	_server = server.ThreadedServer(HOST, PORT)

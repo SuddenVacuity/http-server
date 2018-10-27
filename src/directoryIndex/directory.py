@@ -95,3 +95,32 @@ def makeDir(directory):
 			raise
 
 	print("filepath created: {0}".format(directory))
+
+# searches a directory for a target file
+# path (str) - 
+# target (str) - 
+# OPTIONS: caseSensitive (True) - 
+#          recursive (True) - 
+# RETURNS: [(str), ...] - list of all directories containing the target
+def searchDirectory(path, target, caseSensitive=True, recursive=True):
+	indexList = []
+
+	if(caseSensitive == False):
+		target = target.lower()
+
+	dirs = os.listdir(path)
+
+	for d in dirs:
+		if(caseSensitive == False):
+			d = d.lower()
+
+		current = path + "/" + d
+		if(os.path.isfile(current) == True):
+			if(d == target):
+				indexList.append(path)
+		elif(recursive == True):
+			if(os.path.isdir(current) == True):
+				subIndexList = searchDirectory(current, target)
+				indexList = indexList + subIndexList
+
+	return indexList

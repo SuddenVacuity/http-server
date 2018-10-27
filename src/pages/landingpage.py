@@ -22,19 +22,12 @@ from serverLogic import pageIndex
 # to call this classes functions during processing use the funciton process()
 
 class Landingpage(webpage.Webpage):
-	def performAction(self, urlSplit, params, data):
+	def performAction(self, action, params, data):
 		response = None
-
-		# check if calling subpage
-		if(urlSplit[0] == "subpage"):
-			response = pageIndex.pages["subpage"].process(urlSplit, params, data)
-			status = response.status
-			header = response.header
-			body = response.body
 
 		# this page's functions
 		# this is a GET request
-		elif(urlSplit[0] == "get"):
+		if(action == "get"):
 			filepath = directory.databaseJson + "/" + params["query"]["name"] + ".txt"
 			status = HTTPStatus.OK
 			mimeType = mimetypes.guess_type(filepath)
@@ -47,7 +40,7 @@ class Landingpage(webpage.Webpage):
 				body = b'Entry Does Not Exist'
 		# this is a POST request
 		# there needs to be server side data type validations
-		elif(urlSplit[0] == "post"):
+		elif(action == "post"):
 			baseDir = None
 			# the name the data is stored as
 			# NOTE: this is set in the client that sends the request
@@ -92,7 +85,7 @@ class Landingpage(webpage.Webpage):
 				header = [("content-type", "text/plain")]
 				body = b'Unable to process request'
 		# call for the license
-		elif(urlSplit[0] == "license"):
+		elif(action == "license"):
 			filepath = directory.www + "/LICENSE.html"
 			status = HTTPStatus.OK
 			header = [("content-type", "text/html")]

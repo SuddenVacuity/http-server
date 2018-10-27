@@ -11,16 +11,14 @@ path = os.path.abspath(__file__).rstrip(os.path.basename(__file__))
 dirs = os.listdir(path)
 
 for ob in dirs:
+	if ob.startswith("_") == True:
+		continue
+
+	if ob.endswith(".py") == False:
+		continue
+
 	sp = ob.split(".")
-	print(sp)
 	if len(sp) != 2: 
 		continue
 
-	if sp[1] == "py":
-		if sp[1] == "__init__":
-			continue
-			
-		print("added:", sp[0])
-		__all__.append(sp[0])
-
-print(__all__)
+	__all__.append(sp[0])

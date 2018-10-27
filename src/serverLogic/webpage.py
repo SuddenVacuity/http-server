@@ -21,52 +21,55 @@ from serverLogic import pageIndex
 
 class Webpage():
 	pagePath = None
-	pageName = None
 
 	# set the name and path of the page
 	# name (str) - the name that will be added to the url to request this page
 	# path (str) - path to the folder containing the page's index.html
-	def __init__(self, name, path):
-		self.pageName = name
+	def __init__(self, path):
+		# ending with a slash here simplifies adding files to the path later
+		if(path.endswith("/") == False):
+			path = path + "/"
 		self.pagePath = path
 
-	# do not override
-	# this function should only be called internally
-	def _loadIndex(self, urlSplit):
-		if(urlSplit[0] == self.pageName):
-			filepath = directory.www + self.pagePath + "index.html"
-			status = HTTPStatus.OK
-			header = [("content-type", "text/html")]
-			body = accessFile.readFile(filepath, directory.www)
-
-			return Response(status, header, body)
-
-		return None
+	def _internalError(self):
+		print("ERROR: 500 - Internal Server Error: {} no action taken and neither index.html nor 404.html found".format(self.pagePath))
+		return Response(HTTPStatus.INTERNAL_SERVER_ERROR, [("content-type", "text/plain")], b'500 - Internal Server Error')
 
 	# do not override
 	# this function should only be called internally
 	def _notFound(self):
-		status = HTTPStatus.NOT_FOUND
-		header = [("content-type", "text/html")]
-		body = accessFile.readFile(directory.www + "/404.html", directory.www)
+		try:
+			status = HTTPStatus.NOT_FOUND
+			header = [("content-type", "text/html")]
+			body = accessFile.readFile(directory.www + "/404.html", directory.www)
+		except:
+			return self._internalError()
+
+		return Response(status, header, body)
+
+	# do not override
+	# this function should only be called internally
+	def loadIndex(self):
+		try:
+			filepath = directory.www + self.pagePath + "index.html"
+			status = HTTPStatus.OK
+			header = [("content-type", "text/html")]
+			body = accessFile.readFile(filepath, directory.www)
+		except:
+			return None
 
 		return Response(status, header, body)
 
 	# do not override
 	# this function is called externally when the url is being processed
-	def process(self, urlSplit, params, data):
-		if(len(urlSplit) != 1):
-			urlSplit = urlSplit[1:]
+	def process(self, url, params, data):
+		requestArgument = url.rstrip(self.pagePath)
+		response = self.performAction(requestArgument, params, data)
 
-		response = self._loadIndex(urlSplit)
-
-		if(response == None):
-			response = self.performAction(urlSplit, params, data)
 		if(response == None):
 			response = self._notFound()
 		if(response == None):
-			print("ERROR: 500 - Internal Server Error: {} no action taken and neither index.html nor 404.html found".format(self.pagePath))
-			response = Response(HTTPStatus.INTERNAL_SERVER_ERROR, [("content-type", "text/plain")], b'500 - Internal Server Error')
+			response = self._internalError()
 
 		return response
 
@@ -74,5 +77,5 @@ class Webpage():
 	# this function should only be called by called by process()
 	# RETURNS: (Response) http response data
 	#                     returns None when no action taken
-	def performAction(self, urlSplit, params, data):
+	def performAction(self, action, params, data):
 		return None

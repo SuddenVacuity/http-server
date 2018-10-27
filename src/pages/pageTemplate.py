@@ -30,22 +30,8 @@ from serverLogic import webpage
 # the inherited function: myPage.process(urlSplit, query, data)
 class PageTemplate(webpage.Webpage):
 	# Create copy of this file and place webpage in this function
-	# urlSplit ([(str), ...]) - A list created from a request url path that has had str.split('/') called on it
-	#          Example: GET request: "/subpage/read?myData"
-	#          Becomes: urlSplit = ["", "subpage", "read"]
-	# A      As the urlSplit is passed along to subpages the part that were associated with the previous pages are removed.
- 	#          Example: ["", "subpage", "read"]
- 	# B          First serverLogic sends this to the page named "" which should always be always the landing page
- 	# I          ServerLogic then removes the first element "" from urlSplit
- 	# T            The landing page receives urlSplit as ["subpage", "read"]
- 	#              Then the landing page check if "subpage" is one of its actions
- 	# L            It should find that "subpage" should be sent to a page called "subpage"
- 	# O            If "subpage" is a vaild page urlSplit will be passed to subpage
- 	# N            The landing page then removes the first element "subpage" from urlSplit
- 	# G          The subpage receives urlSplit as ["read"]
- 	#              Then the subpage check if "read" is one of its actions
- 	#              "read" would be a GET request for data so there should be a query value to determine what to read
-	# query ({{"key":"value"}, ...}) - The query arguments extracted from a requests header and requested url
+	# action (str) - The action request to the page. Use this to determine what custom action the page should perform.
+	# params ({{"key":"value"}, ...}) - The query arguments extracted from a requests header and requested url
 	#           NOTE: This is a dictionary containing three sub dictionaries
 	#                 ["query"] (dict) - request query parameters extracted from the url
 	#                 ["cookies"] (dict) - cookies extracted from the headers
@@ -58,5 +44,5 @@ class PageTemplate(webpage.Webpage):
 	#                                      NOTE: cookie structure is "cookiename": {"key": "value", ...}
 	#                 ["headers"] (dict) - non-cookie http header attributes from the headers
 	# data (bytes) - data from the body of an http request
-	def performAction(self, urlSplit, params, data):
+	def performAction(self, action, params, data):
 		return None
